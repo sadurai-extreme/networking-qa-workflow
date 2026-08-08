@@ -1,0 +1,1254 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NOS QA Workflow Tool — Demo Presentation</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/theme/black.css">
+<style>
+  :root {
+    --blue:   #1D3557;
+    --accent: #457B9D;
+    --green:  #52c41a;
+    --red:    #E63946;
+    --gold:   #faad14;
+    --light:  #A8DADC;
+  }
+
+  .reveal { font-family: 'Segoe UI', Arial, sans-serif; }
+
+  /* ── Global section bg ─────────────────────────── */
+  .reveal .slides section { text-align: left; }
+  .reveal .slides section.center-all { text-align: center; }
+
+  /* ── Title slide ───────────────────────────────── */
+  .title-slide { background: linear-gradient(135deg, #0a1628 0%, #1D3557 60%, #457B9D 100%) !important; text-align: center; display: flex !important; flex-direction: column; align-items: center; justify-content: center; }
+  .title-slide h1 { font-size: 2.2em; color: #fff; text-shadow: 0 2px 12px rgba(0,0,0,.5); margin-bottom: .2em; }
+  .title-slide .subtitle { font-size: 1.1em; color: var(--light); margin-bottom: 1.2em; }
+  .title-slide .meta { font-size: .75em; color: #aaa; }
+  .logo-box { display: inline-block; background: #fff; border-radius: 12px; padding: 10px 24px; margin-bottom: 20px; }
+  .logo-text { font-size: 1.4em; font-weight: 800; color: var(--blue); letter-spacing: .5px; }
+  .logo-sub  { font-size: .65em; color: #555; display: block; margin-top: -4px; }
+
+  /* ── Section header slides ─────────────────────── */
+  .section-header { background: linear-gradient(135deg, #0d1f33 0%, #1D3557 100%) !important; text-align: center; }
+  .section-header h2 { color: var(--light); font-size: 2em; margin: 0; }
+  .section-header p  { color: #aaa; font-size: .9em; }
+  .section-num { font-size: 4em; color: rgba(255,255,255,.08); font-weight: 900; line-height: 1; margin-bottom: 8px; }
+
+  /* ── Typography ────────────────────────────────── */
+  .reveal h2 { font-size: 1.4em; color: var(--light); border-bottom: 2px solid var(--accent); padding-bottom: .2em; margin-bottom: .6em; }
+  .reveal h3 { font-size: 1.1em; color: var(--gold); margin-bottom: .4em; }
+  .reveal p, .reveal li { font-size: .72em; line-height: 1.6; }
+  .reveal ul { margin-left: 1.2em; }
+  .reveal ul li { margin-bottom: .3em; }
+
+  /* ── Tag / badge helpers ────────────────────────── */
+  .tag { display: inline-block; border-radius: 12px; padding: 2px 10px; font-size: .62em; font-weight: 700; margin: 2px; vertical-align: middle; }
+  .tag-blue   { background: #1677ff22; color: #4096ff; border: 1px solid #4096ff55; }
+  .tag-green  { background: #52c41a22; color: #73d13d; border: 1px solid #52c41a55; }
+  .tag-red    { background: #ff4d4f22; color: #ff7875; border: 1px solid #ff4d4f55; }
+  .tag-gold   { background: #faad1422; color: #ffc53d; border: 1px solid #faad1455; }
+  .tag-purple { background: #722ed122; color: #b37feb; border: 1px solid #722ed155; }
+  .tag-cyan   { background: #13c2c222; color: #36cfc9; border: 1px solid #13c2c255; }
+
+  /* ── Workflow stage pills ───────────────────────── */
+  .stage-flow { display: flex; align-items: center; flex-wrap: wrap; gap: 4px; margin: 12px 0; }
+  .stage-pill { background: #1D3557; border: 1px solid #457B9D; border-radius: 20px; padding: 5px 14px; font-size: .62em; color: #A8DADC; font-weight: 600; white-space: nowrap; }
+  .stage-pill.active { background: #457B9D; color: #fff; }
+  .stage-arrow { color: #555; font-size: .8em; }
+
+  /* ── Feature cards ──────────────────────────────── */
+  .cards { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-top: 10px; }
+  .cards.three { grid-template-columns: repeat(3, 1fr); }
+  .card { background: #ffffff0d; border: 1px solid #ffffff18; border-radius: 10px; padding: 12px 14px; }
+  .card h4 { font-size: .72em; color: var(--gold); margin: 0 0 5px 0; }
+  .card p  { font-size: .62em; color: #ccc; margin: 0; line-height: 1.5; }
+  .card-icon { font-size: 1.4em; display: block; margin-bottom: 6px; }
+
+  /* ── Tables ─────────────────────────────────────── */
+  .data-table { width: 100%; border-collapse: collapse; font-size: .62em; margin-top: 10px; }
+  .data-table th { background: #1D3557; color: var(--light); padding: 7px 10px; text-align: left; border: 1px solid #2d4a6b; }
+  .data-table td { padding: 6px 10px; border: 1px solid #2a2a3a; color: #ddd; vertical-align: top; }
+  .data-table tr:nth-child(even) td { background: #ffffff08; }
+
+  /* ── Timeline steps ─────────────────────────────── */
+  .timeline { list-style: none; padding: 0; margin: 8px 0; }
+  .timeline li { display: flex; align-items: flex-start; gap: 12px; margin-bottom: 10px; }
+  .tl-num { background: var(--accent); color: #fff; border-radius: 50%; width: 24px; height: 24px; display: flex; align-items: center; justify-content: center; font-size: .65em; font-weight: 700; flex-shrink: 0; margin-top: 2px; }
+  .tl-body h5 { font-size: .68em; color: #fff; margin: 0 0 2px; }
+  .tl-body p  { font-size: .6em;  color: #aaa; margin: 0; }
+
+  /* ── Highlight box ──────────────────────────────── */
+  .highlight-box { background: linear-gradient(135deg, #1D355720, #457B9D20); border-left: 4px solid var(--accent); border-radius: 8px; padding: 10px 14px; margin: 10px 0; }
+  .highlight-box p { font-size: .68em; color: #ddd; margin: 0; }
+
+  /* ── Stat row ───────────────────────────────────── */
+  .stats-row { display: flex; gap: 12px; margin: 10px 0; }
+  .stat-box { flex: 1; background: #ffffff0a; border: 1px solid #ffffff15; border-radius: 8px; padding: 10px; text-align: center; }
+  .stat-box .num { font-size: 1.6em; font-weight: 800; color: var(--light); display: block; }
+  .stat-box .lbl { font-size: .58em; color: #888; }
+
+  /* ── Two-column ─────────────────────────────────── */
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+  .two-col.wide-left { grid-template-columns: 1.6fr 1fr; }
+
+  /* ── Code block ─────────────────────────────────── */
+  .code-block { background: #0d1117; border: 1px solid #30363d; border-radius: 8px; padding: 10px 14px; font-family: 'Consolas', monospace; font-size: .6em; color: #e6edf3; margin: 8px 0; line-height: 1.7; overflow: hidden; }
+  .code-comment { color: #8b949e; }
+  .code-key     { color: #79c0ff; }
+  .code-val     { color: #a5d6ff; }
+  .code-str     { color: #a8ff78; }
+
+  /* ── Check / cross list ─────────────────────────── */
+  .check-list { list-style: none; padding: 0; }
+  .check-list li { font-size: .68em; padding: 3px 0; color: #ddd; }
+  .check-list li::before { content: "✓ "; color: var(--green); font-weight: 700; }
+  .cross-list li::before { content: "✗ "; color: var(--red); }
+
+  /* ── Roadmap row ────────────────────────────────── */
+  .roadmap-row { display: flex; gap: 8px; margin: 8px 0; }
+  .rm-item { flex: 1; border-radius: 8px; padding: 8px 10px; font-size: .6em; }
+  .rm-done   { background: #52c41a18; border: 1px solid #52c41a55; color: #95de64; }
+  .rm-active { background: #faad1418; border: 1px solid #faad1455; color: #ffd666; }
+  .rm-next   { background: #1677ff18; border: 1px solid #1677ff55; color: #69b1ff; }
+  .rm-item strong { display: block; margin-bottom: 3px; }
+
+  /* ── Footer on each slide ───────────────────────── */
+  .slide-footer { position: absolute; bottom: 10px; right: 20px; font-size: .5em; color: #555; }
+
+  /* Fragment highlights */
+  .reveal .fragment.highlight-current-green.current-fragment { color: #73d13d; }
+</style>
+</head>
+<body>
+<div class="reveal">
+<div class="slides">
+
+<!-- ═══════════════════════════════════════════════════════════════════
+     SLIDE 1 — Title
+═══════════════════════════════════════════════════════════════════ -->
+<section class="title-slide" data-background-gradient="linear-gradient(135deg,#0a1628,#1D3557,#457B9D)">
+  <h1 style="font-size:3em; margin:0 auto; letter-spacing:1px; text-align:center;">NOS QA Workflow</h1>
+  <div style="text-align:center; margin-top:18px;">
+    <span class="tag tag-purple" style="font-size:.9em; padding:6px 22px; border-radius:20px; letter-spacing:.5px;">Using Agentic AI</span>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════════════
+     SLIDE 2 — Agenda
+═══════════════════════════════════════════════════════════════════ -->
+<section>
+  <h2>Agenda</h2>
+  <div class="two-col">
+    <div>
+      <ul class="timeline">
+        <li><div class="tl-num">1</div><div class="tl-body"><h5>Problem Statement</h5><p>Why we built this tool</p></div></li>
+        <li><div class="tl-num">2</div><div class="tl-body"><h5>Solution Architecture</h5><p>Tech stack &amp; design</p></div></li>
+        <li><div class="tl-num">3</div><div class="tl-body"><h5>Workflow — Stage by Stage</h5><p>The 7-stage QA pipeline</p></div></li>
+        <li><div class="tl-num">4</div><div class="tl-body"><h5>AI-Powered Generation</h5><p>Skill files, test plans, scripts</p></div></li>
+      </ul>
+    </div>
+    <div>
+      <ul class="timeline">
+        <li><div class="tl-num">5</div><div class="tl-body"><h5>Test Case Management</h5><p>Classification, execution &amp; tracking</p></div></li>
+        <li><div class="tl-num">6</div><div class="tl-body"><h5>ISO DOCX Documentation</h5><p>Extreme Networks standard format</p></div></li>
+        <li><div class="tl-num">7</div><div class="tl-body"><h5>Admin &amp; Observability</h5><p>Audit trail, user mgmt, health checks</p></div></li>
+        <li><div class="tl-num">8</div><div class="tl-body"><h5>Robustness &amp; Quality</h5><p>System tests, error handling</p></div></li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════════════
+     SECTION HEADER — Problem
+═══════════════════════════════════════════════════════════════════ -->
+<section class="section-header">
+  <div class="section-num">01</div>
+  <h2>Problem Statement</h2>
+  <p>What took hours — now takes minutes</p>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════════════
+     SLIDE 3 — Before / After
+═══════════════════════════════════════════════════════════════════ -->
+<section>
+  <h2>Before This Tool</h2>
+  <div class="two-col">
+    <div>
+      <h3>❌ The Old Way</h3>
+      <ul class="check-list cross-list">
+        <li>Manually browse Jira for feature stories</li>
+        <li>Manually write skill/feature spec files</li>
+        <li>Write test plans from scratch in Word/Excel</li>
+        <li>Manually format to ISO/Extreme Networks standard</li>
+        <li>Manually classify each TC (Manual/Semi/Auto)</li>
+        <li>Manually upload TCs to qTest</li>
+        <li>Separate spreadsheets for execution tracking</li>
+        <li>Ad-hoc documentation with inconsistent formats</li>
+      </ul>
+    </div>
+    <div>
+      <h3>✅ With NOS QA Workflow</h3>
+      <ul class="check-list">
+        <li>Auto-fetch stories from Jira in one click</li>
+        <li>AI generates skill files from feature description</li>
+        <li>AI generates complete test plan with TCs</li>
+        <li>Auto-format to Extreme Networks ISO standard</li>
+        <li>AI-assisted TC classification</li>
+        <li>One-click qTest sync</li>
+        <li>Built-in execution tracking dashboard</li>
+        <li>ISO-standard DOCX export in seconds</li>
+      </ul>
+    </div>
+  </div>
+  <div class="stats-row" style="margin-top:16px">
+    <div class="stat-box"><span class="num">~4 hrs</span><span class="lbl">Old: manual test plan</span></div>
+    <div class="stat-box"><span class="num">&lt; 10 min</span><span class="lbl">New: AI-generated plan</span></div>
+    <div class="stat-box"><span class="num">100%</span><span class="lbl">ISO format compliance</span></div>
+    <div class="stat-box"><span class="num">0</span><span class="lbl">Manual formatting steps</span></div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════════════
+     SECTION HEADER — Architecture
+═══════════════════════════════════════════════════════════════════ -->
+<section class="section-header">
+  <div class="section-num">02</div>
+  <h2>Architecture</h2>
+  <p>Modern full-stack with AI integration</p>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════════════
+     SLIDE 4 — Tech Stack
+═══════════════════════════════════════════════════════════════════ -->
+<section>
+  <h2>Technology Stack</h2>
+  <div class="cards three">
+    <div class="card">
+      <span class="card-icon">⚛️</span>
+      <h4>Frontend</h4>
+      <p>React 18 + Vite<br>Ant Design UI<br>React Router<br>Recharts (graphs)<br>Zustand (state)</p>
+    </div>
+    <div class="card">
+      <span class="card-icon">🟢</span>
+      <h4>Backend</h4>
+      <p>Node.js v16 + Express<br>SQLite (better-sqlite3)<br>JWT Authentication<br>bcryptjs passwords<br>Socket.io real-time</p>
+    </div>
+    <div class="card">
+      <span class="card-icon">🤖</span>
+      <h4>AI / LLM</h4>
+      <p>GitHub Models API<br>GPT-4o (heavy tasks)<br>GPT-4o-mini (light)<br>Ollama (local fallback)<br>Streaming responses</p>
+    </div>
+    <div class="card">
+      <span class="card-icon">🔗</span>
+      <h4>Integrations</h4>
+      <p>Jira REST API<br>qTest Platform<br>FA Regression Portal<br>python-docx (DOCX gen)<br>ExcelJS (XLSX gen)</p>
+    </div>
+    <div class="card">
+      <span class="card-icon">📄</span>
+      <h4>Document Gen</h4>
+      <p>Python 3 + python-docx<br>ISO FTP DOCX format<br>15-section structure<br>Keyword-based TC routing<br>ExcelJS XLSX export</p>
+    </div>
+    <div class="card">
+      <span class="card-icon">🛡️</span>
+      <h4>Security</h4>
+      <p>JWT Bearer tokens<br>Role-based access (admin/user)<br>bcrypt password hashing<br>Input sanitization<br>Admin-only routes</p>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════════════
+     SLIDE 5 — System Diagram
+═══════════════════════════════════════════════════════════════════ -->
+<section>
+  <h2>System Architecture</h2>
+  <div style="text-align:center; margin: 10px 0;">
+    <svg viewBox="0 0 820 340" width="100%" style="max-height:300px">
+      <defs>
+        <marker id="arr" markerWidth="8" markerHeight="6" refX="6" refY="3" orient="auto">
+          <polygon points="0 0, 8 3, 0 6" fill="#457B9D"/>
+        </marker>
+      </defs>
+      <!-- Browser -->
+      <rect x="10" y="130" width="130" height="70" rx="8" fill="#1D3557" stroke="#457B9D" stroke-width="1.5"/>
+      <text x="75" y="158" text-anchor="middle" fill="#A8DADC" font-size="12" font-weight="bold">Browser</text>
+      <text x="75" y="174" text-anchor="middle" fill="#aaa" font-size="10">React + Ant Design</text>
+      <text x="75" y="188" text-anchor="middle" fill="#aaa" font-size="10">Port 5101</text>
+      <!-- Arrow browser → backend -->
+      <line x1="140" y1="165" x2="200" y2="165" stroke="#457B9D" stroke-width="1.5" marker-end="url(#arr)"/>
+      <text x="170" y="158" text-anchor="middle" fill="#666" font-size="9">REST / WS</text>
+      <!-- Backend -->
+      <rect x="200" y="100" width="150" height="130" rx="8" fill="#1D3557" stroke="#457B9D" stroke-width="1.5"/>
+      <text x="275" y="125" text-anchor="middle" fill="#A8DADC" font-size="12" font-weight="bold">Backend API</text>
+      <text x="275" y="141" text-anchor="middle" fill="#aaa" font-size="10">Node.js + Express</text>
+      <text x="275" y="157" text-anchor="middle" fill="#aaa" font-size="10">Port 5100</text>
+      <line x1="230" y1="165" x2="200" y2="165" stroke="#457B9D" stroke-width="1"/>
+      <text x="275" y="176" text-anchor="middle" fill="#666" font-size="9">JWT Auth</text>
+      <text x="275" y="192" text-anchor="middle" fill="#666" font-size="9">Stage Routers (1-9)</text>
+      <text x="275" y="208" text-anchor="middle" fill="#666" font-size="9">Admin / Users API</text>
+      <!-- Arrow backend → DB -->
+      <line x1="350" y1="145" x2="415" y2="145" stroke="#457B9D" stroke-width="1.5" marker-end="url(#arr)"/>
+      <!-- DB -->
+      <rect x="415" y="110" width="120" height="70" rx="8" fill="#0d1f33" stroke="#52c41a" stroke-width="1.5"/>
+      <text x="475" y="140" text-anchor="middle" fill="#95de64" font-size="12" font-weight="bold">SQLite DB</text>
+      <text x="475" y="156" text-anchor="middle" fill="#aaa" font-size="10">qa_workflow.db</text>
+      <text x="475" y="170" text-anchor="middle" fill="#aaa" font-size="10">~12 tables</text>
+      <!-- Arrow backend → LLM -->
+      <line x1="350" y1="190" x2="415" y2="220" stroke="#457B9D" stroke-width="1.5" marker-end="url(#arr)"/>
+      <!-- LLM -->
+      <rect x="415" y="200" width="120" height="70" rx="8" fill="#0d1f33" stroke="#722ed1" stroke-width="1.5"/>
+      <text x="475" y="228" text-anchor="middle" fill="#b37feb" font-size="12" font-weight="bold">LLM / AI</text>
+      <text x="475" y="244" text-anchor="middle" fill="#aaa" font-size="10">GitHub Models</text>
+      <text x="475" y="260" text-anchor="middle" fill="#aaa" font-size="10">GPT-4o / Ollama</text>
+      <!-- Arrow backend → Jira -->
+      <line x1="350" y1="120" x2="415" y2="60" stroke="#457B9D" stroke-width="1.5" marker-end="url(#arr)"/>
+      <!-- Jira -->
+      <rect x="415" y="20" width="120" height="60" rx="8" fill="#0d1f33" stroke="#faad14" stroke-width="1.5"/>
+      <text x="475" y="45" text-anchor="middle" fill="#ffd666" font-size="12" font-weight="bold">Jira</text>
+      <text x="475" y="62" text-anchor="middle" fill="#aaa" font-size="10">REST API</text>
+      <!-- Arrow backend → Python -->
+      <line x1="350" y1="200" x2="560" y2="240" stroke="#457B9D" stroke-width="1.5" marker-end="url(#arr)"/>
+      <!-- Python -->
+      <rect x="560" y="210" width="130" height="70" rx="8" fill="#0d1f33" stroke="#13c2c2" stroke-width="1.5"/>
+      <text x="625" y="238" text-anchor="middle" fill="#36cfc9" font-size="12" font-weight="bold">Python</text>
+      <text x="625" y="254" text-anchor="middle" fill="#aaa" font-size="10">generate_iso_docx.py</text>
+      <text x="625" y="268" text-anchor="middle" fill="#aaa" font-size="10">python-docx</text>
+      <!-- Arrow backend → qTest -->
+      <line x1="350" y1="115" x2="560" y2="60" stroke="#457B9D" stroke-width="1.5" marker-end="url(#arr)"/>
+      <!-- qTest -->
+      <rect x="560" y="20" width="130" height="60" rx="8" fill="#0d1f33" stroke="#E63946" stroke-width="1.5"/>
+      <text x="625" y="45" text-anchor="middle" fill="#ff7875" font-size="12" font-weight="bold">qTest</text>
+      <text x="625" y="62" text-anchor="middle" fill="#aaa" font-size="10">TC Upload / Sync</text>
+      <!-- Users -->
+      <rect x="710" y="130" width="100" height="70" rx="8" fill="#1D3557" stroke="#457B9D" stroke-width="1.5"/>
+      <text x="760" y="158" text-anchor="middle" fill="#A8DADC" font-size="11" font-weight="bold">Team</text>
+      <text x="760" y="173" text-anchor="middle" fill="#aaa" font-size="10">18 SQA Users</text>
+      <text x="760" y="187" text-anchor="middle" fill="#aaa" font-size="10">Admin + Role</text>
+      <line x1="710" y1="165" x2="650" y2="165" stroke="#457B9D" stroke-width="1" stroke-dasharray="4"/>
+      <!-- Production label -->
+      <rect x="560" y="120" width="130" height="50" rx="8" fill="#0d1f33" stroke="#457B9D" stroke-width="1.5"/>
+      <text x="625" y="142" text-anchor="middle" fill="#A8DADC" font-size="11" font-weight="bold">Server</text>
+      <text x="625" y="158" text-anchor="middle" fill="#aaa" font-size="10">10.127.26.9</text>
+      <line x1="560" y1="145" x2="540" y2="145" stroke="#457B9D" stroke-width="1.5"/>
+    </svg>
+  </div>
+  <div class="highlight-box">
+    <p>Production server: <strong>10.127.26.9</strong> · Backend: port 5100 · Frontend: port 5101 · SQLite DB: ~12 tables · 18 users pre-loaded</p>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════════════
+     SECTION HEADER — Workflow
+═══════════════════════════════════════════════════════════════════ -->
+<section class="section-header">
+  <div class="section-num">03</div>
+  <h2>The 7-Stage Workflow</h2>
+  <p>From Jira story to ISO test plan document</p>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════════════
+     SLIDE 6 — Workflow Overview
+═══════════════════════════════════════════════════════════════════ -->
+<section>
+  <h2>End-to-End Workflow Pipeline</h2>
+  <table class="data-table">
+    <thead>
+      <tr><th>#</th><th>Stage</th><th>What Happens</th><th>AI?</th><th>Output</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="tag tag-blue">1</span></td>
+        <td><strong>Jira Story</strong></td>
+        <td>Select EXOS release → auto-fetch Jira story details (title, description, type, priority)</td>
+        <td>—</td>
+        <td>Workflow created in DB</td>
+      </tr>
+      <tr>
+        <td><span class="tag tag-purple">2</span></td>
+        <td><strong>Skill File</strong></td>
+        <td>AI generates structured feature knowledge file from Jira description. Reviewer approves.</td>
+        <td><span class="tag tag-purple">GPT-4o</span></td>
+        <td>Approved skill .md file</td>
+      </tr>
+      <tr>
+        <td><span class="tag tag-green">3</span></td>
+        <td><strong>Test Plan</strong></td>
+        <td>AI generates comprehensive test plan with test cases from skill file. Editable Markdown preview.</td>
+        <td><span class="tag tag-purple">GPT-4o</span></td>
+        <td>Test plan document</td>
+      </tr>
+      <tr>
+        <td><span class="tag tag-gold">4</span></td>
+        <td><strong>TC Classification</strong></td>
+        <td>AI classifies each TC as Manual / Semi-Automatable / Automatable. Bulk or individual override.</td>
+        <td><span class="tag tag-purple">GPT-4o-mini</span></td>
+        <td>Classified TCs in DB</td>
+      </tr>
+      <tr>
+        <td><span class="tag tag-cyan">5</span></td>
+        <td><strong>Script Generation</strong></td>
+        <td>Generates TCL regression scripts for automatable test cases.</td>
+        <td><span class="tag tag-purple">GPT-4o</span></td>
+        <td>TCL script files</td>
+      </tr>
+      <tr>
+        <td><span class="tag tag-red">6</span></td>
+        <td><strong>TC Execution</strong></td>
+        <td>Track pass/fail/blocked for each TC. Notes, build version, platform. Pie chart summary.</td>
+        <td>—</td>
+        <td>Execution results</td>
+      </tr>
+      <tr>
+        <td><span class="tag tag-green">7</span></td>
+        <td><strong>Workflow Completion</strong></td>
+        <td>Final summary report. ISO DOCX export. qTest upload. Mark workflow complete.</td>
+        <td>—</td>
+        <td>ISO DOCX + qTest</td>
+      </tr>
+    </tbody>
+  </table>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════════════
+     SLIDE 6b — Process Flowchart
+═══════════════════════════════════════════════════════════════════ -->
+<section>
+  <h2>Complete Process Flowchart</h2>
+  <div style="text-align:center">
+  <svg viewBox="0 0 1060 390" width="100%" style="max-height:360px; display:block; margin:0 auto">
+    <defs>
+      <marker id="fa" markerWidth="9" markerHeight="6" refX="7" refY="3" orient="auto">
+        <polygon points="0 0,9 3,0 6" fill="#457B9D"/>
+      </marker>
+      <marker id="fag" markerWidth="9" markerHeight="6" refX="7" refY="3" orient="auto">
+        <polygon points="0 0,9 3,0 6" fill="#52c41a"/>
+      </marker>
+      <marker id="far" markerWidth="9" markerHeight="6" refX="7" refY="3" orient="auto">
+        <polygon points="0 0,9 3,0 6" fill="#ff7875"/>
+      </marker>
+    </defs>
+
+    <!-- ── ROW 1 ─────────────────────────────────────────────── -->
+
+    <!-- Box 1: Jira Story -->
+    <rect x="20" y="55" width="130" height="52" rx="7" fill="#0d1b2a" stroke="#faad14" stroke-width="2"/>
+    <text x="85" y="76" text-anchor="middle" fill="#ffd666" font-size="10.5" font-weight="bold">Stage 1</text>
+    <text x="85" y="91" text-anchor="middle" fill="#ddd" font-size="10">Jira Story</text>
+    <text x="85" y="103" text-anchor="middle" fill="#aaa" font-size="8.5">Select Feature</text>
+
+    <!-- Arrow 1→2 -->
+    <line x1="150" y1="81" x2="182" y2="81" stroke="#457B9D" stroke-width="1.8" marker-end="url(#fa)"/>
+
+    <!-- Box 2: Skill File Generation (AI) -->
+    <rect x="182" y="50" width="140" height="62" rx="7" fill="#160040" stroke="#722ed1" stroke-width="2"/>
+    <text x="252" y="69" text-anchor="middle" fill="#b37feb" font-size="10" font-weight="bold">Stage 2 · 🤖 AI</text>
+    <text x="252" y="84" text-anchor="middle" fill="#ddd" font-size="10">Skill File</text>
+    <text x="252" y="98" text-anchor="middle" fill="#ddd" font-size="10">Generation</text>
+    <text x="252" y="108" text-anchor="middle" fill="#888" font-size="8">claude-opus-4-8</text>
+
+    <!-- 5 inputs label above Box 2 -->
+    <text x="252" y="38" text-anchor="middle" fill="#666" font-size="8">Jira · Commits · Templates · EXOS Ref · Docs</text>
+    <line x1="252" y1="41" x2="252" y2="50" stroke="#555" stroke-width="1" stroke-dasharray="3"/>
+
+    <!-- Arrow 2→Gate -->
+    <line x1="322" y1="81" x2="354" y2="81" stroke="#457B9D" stroke-width="1.8" marker-end="url(#fa)"/>
+
+    <!-- Gate Diamond: Review/Approve -->
+    <polygon points="395,51 435,81 395,111 355,81" fill="#150c00" stroke="#d48806" stroke-width="2"/>
+    <text x="395" y="77" text-anchor="middle" fill="#ffd666" font-size="9" font-weight="bold">Review</text>
+    <text x="395" y="90" text-anchor="middle" fill="#ffd666" font-size="9">Approve?</text>
+
+    <!-- YES label and arrow →Test Plan -->
+    <text x="452" y="75" fill="#52c41a" font-size="9" font-weight="bold">Yes</text>
+    <line x1="435" y1="81" x2="467" y2="81" stroke="#52c41a" stroke-width="1.8" marker-end="url(#fag)"/>
+
+    <!-- Box 3: Test Plan Generation (AI) -->
+    <rect x="467" y="50" width="140" height="62" rx="7" fill="#160040" stroke="#722ed1" stroke-width="2"/>
+    <text x="537" y="69" text-anchor="middle" fill="#b37feb" font-size="10" font-weight="bold">Stage 3 · 🤖 AI</text>
+    <text x="537" y="84" text-anchor="middle" fill="#ddd" font-size="10">Test Plan</text>
+    <text x="537" y="98" text-anchor="middle" fill="#ddd" font-size="10">Generation</text>
+    <text x="537" y="108" text-anchor="middle" fill="#888" font-size="8">New Feature / Enhancement</text>
+
+    <!-- Arrow 3→4 -->
+    <line x1="607" y1="81" x2="637" y2="81" stroke="#457B9D" stroke-width="1.8" marker-end="url(#fa)"/>
+
+    <!-- Box 4: TC Classification (AI) -->
+    <rect x="637" y="50" width="140" height="62" rx="7" fill="#160040" stroke="#722ed1" stroke-width="2"/>
+    <text x="707" y="69" text-anchor="middle" fill="#b37feb" font-size="10" font-weight="bold">Stage 4 · 🤖 AI</text>
+    <text x="707" y="84" text-anchor="middle" fill="#ddd" font-size="10">TC Classification</text>
+    <text x="707" y="98" text-anchor="middle" fill="#888" font-size="8.5">Manual · Semi · Automatable</text>
+    <text x="707" y="108" text-anchor="middle" fill="#888" font-size="8">claude-sonnet-4-6</text>
+
+    <!-- Arrow 4→5 (down into row 2) -->
+    <line x1="707" y1="112" x2="707" y2="248" stroke="#457B9D" stroke-width="1.8" marker-end="url(#fa)"/>
+
+    <!-- ── NO branch from Gate ─────────────────────────────── -->
+    <!-- No label and arrow going down -->
+    <text x="402" y="126" fill="#ff7875" font-size="9" font-weight="bold">No</text>
+    <line x1="395" y1="111" x2="395" y2="155" stroke="#ff7875" stroke-width="1.5"/>
+
+    <!-- Edit Skill File box -->
+    <rect x="327" y="155" width="136" height="36" rx="6" fill="#200000" stroke="#ff4d4f" stroke-width="1.5"/>
+    <text x="395" y="170" text-anchor="middle" fill="#ff7875" font-size="10" font-weight="bold">Edit Skill File</text>
+    <text x="395" y="183" text-anchor="middle" fill="#888" font-size="8">Manual corrections</text>
+
+    <!-- Loop back arrow: left → up → into Stage 2 left -->
+    <polyline points="327,173 173,173 173,81 182,81" fill="none" stroke="#ff7875" stroke-width="1.5" stroke-dasharray="5,3" marker-end="url(#far)"/>
+
+    <!-- ── ROW 2 (right to left) ───────────────────────────── -->
+
+    <!-- Box 5: Script Generation (AI) -->
+    <rect x="637" y="248" width="140" height="62" rx="7" fill="#160040" stroke="#722ed1" stroke-width="2"/>
+    <text x="707" y="267" text-anchor="middle" fill="#b37feb" font-size="10" font-weight="bold">Stage 5 · 🤖 AI</text>
+    <text x="707" y="282" text-anchor="middle" fill="#ddd" font-size="10">Script Generation</text>
+    <text x="707" y="296" text-anchor="middle" fill="#888" font-size="8.5">TCL / NOS API Scripts</text>
+    <text x="707" y="306" text-anchor="middle" fill="#888" font-size="8">(Auto TCs only)</text>
+
+    <!-- Arrow 5→6 (left) -->
+    <line x1="637" y1="279" x2="607" y2="279" stroke="#457B9D" stroke-width="1.8" marker-end="url(#fa)"/>
+
+    <!-- Box 6: TC Execution -->
+    <rect x="467" y="248" width="140" height="62" rx="7" fill="#001515" stroke="#13c2c2" stroke-width="2"/>
+    <text x="537" y="267" text-anchor="middle" fill="#36cfc9" font-size="10.5" font-weight="bold">Stage 6</text>
+    <text x="537" y="282" text-anchor="middle" fill="#ddd" font-size="10">TC Execution</text>
+    <text x="537" y="296" text-anchor="middle" fill="#888" font-size="8.5">&amp; Tracking</text>
+    <text x="537" y="306" text-anchor="middle" fill="#888" font-size="8">Pass · Fail · Blocked</text>
+
+    <!-- Arrow 6→7 (left) -->
+    <line x1="467" y1="279" x2="437" y2="279" stroke="#457B9D" stroke-width="1.8" marker-end="url(#fa)"/>
+
+    <!-- Box 7: ISO DOCX + qTest -->
+    <rect x="297" y="248" width="140" height="62" rx="7" fill="#001528" stroke="#1890ff" stroke-width="2"/>
+    <text x="367" y="267" text-anchor="middle" fill="#69b1ff" font-size="10.5" font-weight="bold">Stage 7</text>
+    <text x="367" y="282" text-anchor="middle" fill="#ddd" font-size="10">ISO DOCX Export</text>
+    <text x="367" y="296" text-anchor="middle" fill="#888" font-size="8.5">+ qTest Upload</text>
+    <text x="367" y="306" text-anchor="middle" fill="#888" font-size="8">15-section document</text>
+
+    <!-- Arrow 7→Complete (left) -->
+    <line x1="297" y1="279" x2="267" y2="279" stroke="#52c41a" stroke-width="1.8" marker-end="url(#fag)"/>
+
+    <!-- Box 8: Complete -->
+    <rect x="110" y="253" width="157" height="52" rx="26" fill="#002800" stroke="#52c41a" stroke-width="2.5"/>
+    <text x="188" y="276" text-anchor="middle" fill="#95de64" font-size="13" font-weight="bold">✓ Complete</text>
+    <text x="188" y="292" text-anchor="middle" fill="#52c41a" font-size="9">Workflow Done</text>
+
+    <!-- ── Legend ────────────────────────────────────────────── -->
+    <rect x="20" y="345" width="12" height="12" rx="2" fill="#160040" stroke="#722ed1" stroke-width="1.5"/>
+    <text x="36" y="356" fill="#b37feb" font-size="8.5">AI Stage (claude)</text>
+    <rect x="175" y="345" width="12" height="12" rx="2" fill="#0d1b2a" stroke="#faad14" stroke-width="1.5"/>
+    <text x="191" y="356" fill="#ffd666" font-size="8.5">Jira Input</text>
+    <polygon points="302,351 316,345 330,351 316,357" fill="#150c00" stroke="#d48806" stroke-width="1.5"/>
+    <text x="335" y="356" fill="#ffd666" font-size="8.5">Review Gate</text>
+    <rect x="440" y="345" width="12" height="12" rx="2" fill="#001515" stroke="#13c2c2" stroke-width="1.5"/>
+    <text x="456" y="356" fill="#36cfc9" font-size="8.5">Execution</text>
+    <rect x="540" y="345" width="12" height="12" rx="2" fill="#001528" stroke="#1890ff" stroke-width="1.5"/>
+    <text x="556" y="356" fill="#69b1ff" font-size="8.5">Output / Export</text>
+    <line x1="650" y1="351" x2="680" y2="351" stroke="#ff7875" stroke-width="1.5" stroke-dasharray="4,2"/>
+    <text x="685" y="356" fill="#ff7875" font-size="8.5">Re-edit loop</text>
+  </svg>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════════════
+     SLIDE 7 — Stage 1-2 Detail
+═══════════════════════════════════════════════════════════════════ -->
+<section>
+  <h2>Stage 1 &amp; 2 — Story Selection + Skill File</h2>
+  <div class="two-col">
+    <div>
+      <h3>📋 Stage 1: Jira Story Selection</h3>
+      <ul class="check-list">
+        <li>Select EXOS release (e.g. EXOS 34.1)</li>
+        <li>Dropdown auto-populated from Jira REST API</li>
+        <li>Stories filtered by project key + fix-version</li>
+        <li>Auto-captures: title, description, type, priority, status, labels</li>
+        <li>Supports manual story ID override</li>
+        <li>Detects <strong>New Feature</strong> vs <strong>Enhancement</strong> automatically</li>
+        <li>Creates workflow record + audit entry in DB</li>
+      </ul>
+      <div class="code-block">
+        <span class="code-comment"># Example Jira story auto-fetched</span><br>
+        <span class="code-key">Story ID:</span> <span class="code-str">EXOS-39635</span><br>
+        <span class="code-key">Title:</span> <span class="code-val">SNMPv3 SHA-256 Auth Support</span><br>
+        <span class="code-key">Type:</span> <span class="code-val">New Feature</span><br>
+        <span class="code-key">Release:</span> <span class="code-val">EXOS 34.1</span>
+      </div>
+    </div>
+    <div>
+      <h3>🤖 Stage 2: AI Skill File Overview</h3>
+      <ul class="check-list">
+        <li>AI orchestrates <strong>5 data sources</strong> simultaneously</li>
+        <li>Generates 8-section functional specification document</li>
+        <li>Cites actual function names from git commits</li>
+        <li>Includes real CLI commands from EXOS command reference</li>
+        <li>Full Markdown editor — manual edits tracked in amendment log</li>
+        <li>Review + Approve gate required before Stage 3</li>
+        <li>Version history maintained (version control built-in)</li>
+      </ul>
+      <div class="highlight-box">
+        <p>🔒 <strong>Quality Gate:</strong> Stage 3 is locked until an approver reviews the Skill File. This ensures every test plan is grounded in <strong>validated, human-reviewed feature knowledge</strong>.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════════════
+     SLIDE 7b — Skill File Generation Deep-Dive
+═══════════════════════════════════════════════════════════════════ -->
+<section>
+  <h2>Stage 2 — Skill File Generation (Deep Dive)</h2>
+  <div class="two-col">
+    <div>
+      <h3>🔀 5 AI Input Sources</h3>
+      <ul class="timeline" style="margin-top:6px">
+        <li>
+          <div class="tl-num" style="background:#E63946">1</div>
+          <div class="tl-body"><h5>Jira Story</h5><p>Title, description, acceptance criteria, labels, type — the primary context</p></div>
+        </li>
+        <li>
+          <div class="tl-num" style="background:#722ed1">2</div>
+          <div class="tl-body"><h5>Git Commit Analysis</h5><p>Analyzes EXOS repo commits tagged with the story ID — extracts real function names, modified files, data structures (e.g. <code>lldpFaProcessBypassNl()</code> in <code>lldpFa.c</code>)</p></div>
+        </li>
+        <li>
+          <div class="tl-num" style="background:#457B9D">3</div>
+          <div class="tl-body"><h5>Default Skill Templates</h5><p>Up to 10 most similar approved skill files from knowledge base — scored by keyword matching against story</p></div>
+        </li>
+        <li>
+          <div class="tl-num" style="background:#52c41a">4</div>
+          <div class="tl-body"><h5>EXOS Command Reference</h5><p>Top 5 most relevant sections from EXOS 33.7.1 command reference (8 KB extracted per generation)</p></div>
+        </li>
+        <li>
+          <div class="tl-num" style="background:#faad14">5</div>
+          <div class="tl-body"><h5>Uploaded Reference Docs</h5><p>Optional: PRD, MRD, previous test plan DOCX — parsed and injected as context</p></div>
+        </li>
+      </ul>
+    </div>
+    <div>
+      <h3>📄 8-Section Skill File Structure</h3>
+      <table class="data-table" style="margin-top:6px">
+        <thead><tr><th>#</th><th>Section</th><th>Key Content</th></tr></thead>
+        <tbody>
+          <tr><td>1</td><td><strong>Feature Overview</strong></td><td>Purpose, use cases, standards, prerequisites</td></tr>
+          <tr><td>2</td><td><strong>Functional Description</strong></td><td>How it works step-by-step, state transitions, default behaviour</td></tr>
+          <tr><td>3</td><td><strong>EXOS Implementation</strong></td><td>Real function names, modules, data structures from commit analysis</td></tr>
+          <tr><td>4</td><td><strong>Attributes &amp; Parameters</strong></td><td>All config options, valid ranges, defaults, platform variations</td></tr>
+          <tr><td>5</td><td><strong>CLI Commands</strong></td><td>All config &amp; show commands with syntax, examples, actual output</td></tr>
+          <tr><td>6</td><td><strong>Feature Interactions</strong></td><td>Integration with VLAN, routing, ACL, QoS, security</td></tr>
+          <tr><td>7</td><td><strong>Operational Characteristics</strong></td><td>Scale limits, CPU/memory, HA behaviour, failover, logging</td></tr>
+          <tr><td>8</td><td><strong>Known Issues &amp; Limitations</strong></td><td>Platform limitations, restrictions, future work</td></tr>
+        </tbody>
+      </table>
+      <div class="highlight-box" style="margin-top:10px">
+        <p>🤖 Model: <strong>claude-opus-4-8</strong> (heavy) · Commit integration is <strong>mandatory</strong> — generic output is rejected</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════════════
+     SLIDE 8 — Stage 3 Deep-Dive
+═══════════════════════════════════════════════════════════════════ -->
+<section>
+  <h2>Stage 3 — AI Test Plan Generation (Deep Dive)</h2>
+  <div class="two-col">
+    <div>
+      <h3>🔀 Feature Type-Aware Generation</h3>
+      <p style="font-size:.6em;color:#aaa;margin-bottom:6px">The AI uses a <strong>different strategy</strong> depending on story type:</p>
+      <table class="data-table">
+        <thead><tr><th>Aspect</th><th>New Feature</th><th>Enhancement</th></tr></thead>
+        <tbody>
+          <tr><td>TC Count (Standard)</td><td>60–100 TCs</td><td>30–50 TCs</td></tr>
+          <tr><td>State machine tests</td><td><span class="tag tag-green">✓ Include</span></td><td><span class="tag tag-red">✗ Skip</span></td></tr>
+          <tr><td>Switch events / reboot</td><td><span class="tag tag-green">✓ Include</span></td><td><span class="tag tag-red">✗ Skip</span></td></tr>
+          <tr><td>Scaling / performance</td><td><span class="tag tag-green">✓ Include</span></td><td><span class="tag tag-red">✗ Skip</span></td></tr>
+          <tr><td>New functionality</td><td><span class="tag tag-green">✓ Full coverage</span></td><td><span class="tag tag-green">✓ Focus here</span></td></tr>
+          <tr><td>Negative tests</td><td><span class="tag tag-green">✓ Include</span></td><td><span class="tag tag-green">✓ Include</span></td></tr>
+        </tbody>
+      </table>
+      <div class="highlight-box" style="margin-top:10px">
+        <p>🤖 Model: <strong>claude-opus-4-8</strong> · <strong>Streaming output</strong> — test cases appear in real time as the AI generates them</p>
+      </div>
+    </div>
+    <div>
+      <h3>📐 7 Universal Test Categories</h3>
+      <ul style="list-style:none;padding:0;margin-top:6px">
+        <li style="font-size:.63em;padding:3px 0;color:#A8DADC"><span class="tag tag-blue">Cat 1</span> Basic Functionality — enable/disable, all config commands, show commands</li>
+        <li style="font-size:.63em;padding:3px 0;color:#ccc"><span class="tag tag-green">Cat 2</span> Boundary Value — all parameter limits, min/max/edge values</li>
+        <li style="font-size:.63em;padding:3px 0;color:#ccc"><span class="tag tag-gold">Cat 3</span> State Machine — all states and valid/invalid transitions</li>
+        <li style="font-size:.63em;padding:3px 0;color:#ccc"><span class="tag tag-cyan">Cat 4</span> Switch Events — reboot, MSM failover, port flaps, persistence</li>
+        <li style="font-size:.63em;padding:3px 0;color:#ccc"><span class="tag tag-purple">Cat 5</span> Integration — VLAN, routing, ACL, QoS, other EXOS subsystems</li>
+        <li style="font-size:.63em;padding:3px 0;color:#ccc"><span class="tag tag-red">Cat 6</span> Scaling &amp; Performance — max capacity, throughput, CPU under load</li>
+        <li style="font-size:.63em;padding:3px 0;color:#ccc"><span class="tag tag-gold">Cat 7</span> Negative Testing — invalid inputs, error handling, rejection cases</li>
+      </ul>
+      <h3 style="margin-top:12px">📊 Coverage Levels</h3>
+      <div class="roadmap-row">
+        <div class="rm-item rm-done"><strong>SANITY</strong>20–30 TCs<br>Basic + key negative</div>
+        <div class="rm-item rm-active"><strong>STANDARD</strong>60–100 TCs<br>Cat 1,2,4,5,7</div>
+        <div class="rm-item rm-next"><strong>COMPREHENSIVE</strong>120–200 TCs<br>All 7 categories</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════════════
+     SLIDE 8b — TC Format + Stage 4
+═══════════════════════════════════════════════════════════════════ -->
+<section>
+  <h2>Stage 3 — TC Format &amp; Stage 4 Classification</h2>
+  <div class="two-col">
+    <div>
+      <h3>📝 Each TC Has This Exact Structure</h3>
+      <div class="code-block">
+        <span class="code-comment">#### 5.4.1 Configure SNMPv3 SHA-256 auth protocol</span><br><br>
+        <span class="code-key">Topology used:</span> <span class="code-val">Single-node</span><br><br>
+        <span class="code-key">Methodology:</span><br>
+        <span class="code-val">Create SNMPv3 user with SHA-256 authentication and verify.</span><br><br>
+        <span class="code-val">a. Configure SNMPv3 user with SHA-256</span><br>
+        <span class="code-str">   CLI : configure snmpv3 add user v3user authentication sha256 auth-password ExtremePass01!</span><br><br>
+        <span class="code-val">b. Verify user is created</span><br>
+        <span class="code-str">   CLI : show snmpv3 user</span><br><br>
+        <span class="code-key">Pass Criteria:</span><br>
+        <span class="code-val">User created with SHA-256. Show output confirms auth-protocol SHA-256.</span><br><br>
+        <span class="code-key">Priority:</span> <span class="code-str">P1</span> &nbsp;
+        <span class="code-key">Sanity:</span> <span class="code-str">Yes</span>
+      </div>
+    </div>
+    <div>
+      <h3>🏷️ Stage 4: TC Classification</h3>
+      <ul class="check-list">
+        <li>Parses generated test plan → creates TC records in DB</li>
+        <li>AI evaluates each TC's methodology steps</li>
+        <li>Determines if steps can be expressed via API/CLI calls</li>
+        <li>Classification + rationale stored per TC</li>
+        <li>Bulk re-classify with one click</li>
+        <li>Individual override + custom rationale</li>
+        <li>AI Chat advisor for reclassification decisions</li>
+      </ul>
+      <div class="stats-row" style="margin-top:12px">
+        <div class="stat-box"><span class="num" style="color:#ff4d4f;font-size:1em">Manual</span><span class="lbl">Physical actions, traffic observation, hardware changes</span></div>
+        <div class="stat-box"><span class="num" style="color:#faad14;font-size:1em">Semi-Auto</span><span class="lbl">CLI steps auto, result verify manual</span></div>
+        <div class="stat-box"><span class="num" style="color:#52c41a;font-size:1em">Automatable</span><span class="lbl">Full API/CLI script possible</span></div>
+      </div>
+      <div class="highlight-box" style="margin-top:8px">
+        <p>🤖 Model: <strong>claude-sonnet-4-6</strong> (light) — fast batch classification with rationale for each TC</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════════════
+     SECTION HEADER — AI
+═══════════════════════════════════════════════════════════════════ -->
+<section class="section-header">
+  <div class="section-num">04</div>
+  <h2>AI-Powered Generation</h2>
+  <p>From feature description to complete test documentation</p>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════════════
+     SLIDE 9 — AI Details
+═══════════════════════════════════════════════════════════════════ -->
+<section>
+  <h2>How AI is Used Throughout</h2>
+  <div class="cards three">
+    <div class="card">
+      <h4>🧠 Skill File Generation</h4>
+      <p>claude-opus-4-8 fuses <strong>5 sources</strong>: Jira story, git commit analysis (real function names), top-10 matched skill templates, EXOS command reference, and uploaded docs → 8-section feature spec. <span class="tag tag-purple">Stage 2</span></p>
+    </div>
+    <div class="card">
+      <h4>📋 Test Plan Generation</h4>
+      <p>claude-opus-4-8 uses approved skill file + guidelines. Detects <strong>New Feature vs Enhancement</strong> automatically — different category coverage + TC count targets. Streams in real time. <span class="tag tag-purple">Stage 3</span></p>
+    </div>
+    <div class="card">
+      <h4>🏷️ TC Classification</h4>
+      <p>claude-sonnet-4-6 evaluates each TC's methodology steps — determines Manual / Semi-Automatable / Automatable with rationale. Bulk or per-TC mode, override supported. <span class="tag tag-purple">Stage 4</span></p>
+    </div>
+    <div class="card">
+      <h4>⚡ Script Generation</h4>
+      <p>claude-opus-4-8 generates TCL/NOS API regression scripts for automatable TCs using nosApiTester framework conventions and EXOS scripting patterns. <span class="tag tag-purple">Stage 5</span></p>
+    </div>
+    <div class="card">
+      <h4>💬 AI Chat Advisor</h4>
+      <p>Context-aware chat on every stage. AI knows the current workflow's skill file, test plan, and TCs. Can re-classify, improve TCs, explain decisions, answer protocol questions. <span class="tag tag-cyan">All Stages</span></p>
+    </div>
+    <div class="card">
+      <h4>📊 Guidelines-Driven Quality</h4>
+      <p>All prompts anchored to <code>TEST_PLAN_GENERATION_GUIDELINES.md</code> — 1,000+ lines defining TC format, 15-section mapping, good/bad examples, and EXOS CLI requirements. <span class="tag tag-gold">Quality Control</span></p>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════════════
+     SLIDE 10 — Generation Guidelines
+═══════════════════════════════════════════════════════════════════ -->
+<section>
+  <h2>Quality-Driven AI Prompting</h2>
+  <div class="two-col wide-left">
+    <div>
+      <h3>TEST_PLAN_GENERATION_GUIDELINES.md</h3>
+      <p>A comprehensive 1,000+ line prompt engineering document that controls AI output quality:</p>
+      <ul class="check-list">
+        <li>Defines exactly what each of the 15 test sections covers</li>
+        <li>Provides keyword mapping for automatic TC routing</li>
+        <li>Includes good/bad test case examples</li>
+        <li>Specifies EXOS-specific CLI syntax requirements</li>
+        <li>Mandates sanity flag, topology reference, pass criteria format</li>
+        <li>Evaluation rubric for self-scoring generated plans</li>
+        <li>Negative test case requirements</li>
+        <li>Scalability &amp; performance test templates</li>
+      </ul>
+    </div>
+    <div>
+      <h3>15 Mandatory TC Sections</h3>
+      <ul style="list-style:none; padding:0">
+        <li style="font-size:.58em; padding:2px 0; color:#ccc">5.1  Conformance to Industry Standard</li>
+        <li style="font-size:.58em; padding:2px 0; color:#4096ff">5.2  Feature Adherence to Functional Spec <span class="tag tag-blue">default</span></li>
+        <li style="font-size:.58em; padding:2px 0; color:#ccc">5.3  Feature Adherence to PRD/MRD</li>
+        <li style="font-size:.58em; padding:2px 0; color:#ccc">5.4  Feature Configuration - CLI &amp; Network Mgmt</li>
+        <li style="font-size:.58em; padding:2px 0; color:#ccc">5.5  SNMP MIB Verification</li>
+        <li style="font-size:.58em; padding:2px 0; color:#ccc">5.6  Redundancy / Resiliency / Failover</li>
+        <li style="font-size:.58em; padding:2px 0; color:#ccc">5.7  Feature Scaling &amp; Limit Testing</li>
+        <li style="font-size:.58em; padding:2px 0; color:#ccc">5.8  Feature Performance</li>
+        <li style="font-size:.58em; padding:2px 0; color:#ccc">5.9–5.10  Integrated Scaling &amp; Performance</li>
+        <li style="font-size:.58em; padding:2px 0; color:#ccc">5.11 Interoperability — Extreme &amp; 3rd Party</li>
+        <li style="font-size:.58em; padding:2px 0; color:#ccc">5.12 Diagnostic &amp; Debug Testing</li>
+        <li style="font-size:.58em; padding:2px 0; color:#ccc">5.13 Usability Testing</li>
+        <li style="font-size:.58em; padding:2px 0; color:#ff7875">5.14 Negative Testing</li>
+        <li style="font-size:.58em; padding:2px 0; color:#ccc">5.15 System Resource &amp; Stress testing</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════════════
+     SECTION HEADER — TC Execution
+═══════════════════════════════════════════════════════════════════ -->
+<section class="section-header">
+  <div class="section-num">05</div>
+  <h2>TC Execution &amp; Tracking</h2>
+  <p>Real-time execution dashboard with full audit trail</p>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════════════
+     SLIDE 11 — Execution Dashboard
+═══════════════════════════════════════════════════════════════════ -->
+<section>
+  <h2>Stage 6 — TC Execution Tracking</h2>
+  <div class="two-col">
+    <div>
+      <h3>📊 Execution Dashboard Features</h3>
+      <ul class="check-list">
+        <li>Per-TC result recording: Pass / Fail / Blocked / Not Run</li>
+        <li>Notes &amp; updated methodology per execution</li>
+        <li>Platform + build version tags</li>
+        <li>Execution session management (group by date/build)</li>
+        <li>Real-time pie chart: colour-coded by result</li>
+        <li>Pass rate calculation with trend</li>
+        <li>Bulk result update support</li>
+        <li>Export execution results to XLSX</li>
+      </ul>
+    </div>
+    <div>
+      <h3>🎨 Result Color Coding</h3>
+      <div style="margin: 8px 0">
+        <div style="display:flex; align-items:center; gap:10px; margin:6px 0">
+          <span style="background:#52c41a; width:14px; height:14px; border-radius:50%; display:inline-block"></span>
+          <span style="font-size:.65em; color:#95de64">Pass — TC verified successfully</span>
+        </div>
+        <div style="display:flex; align-items:center; gap:10px; margin:6px 0">
+          <span style="background:#ff4d4f; width:14px; height:14px; border-radius:50%; display:inline-block"></span>
+          <span style="font-size:.65em; color:#ff7875">Fail — TC did not meet criteria</span>
+        </div>
+        <div style="display:flex; align-items:center; gap:10px; margin:6px 0">
+          <span style="background:#fadb14; width:14px; height:14px; border-radius:50%; display:inline-block"></span>
+          <span style="font-size:.65em; color:#ffd666">Blocked — dependency / environment issue</span>
+        </div>
+        <div style="display:flex; align-items:center; gap:10px; margin:6px 0">
+          <span style="background:#ff7875; width:14px; height:14px; border-radius:50%; display:inline-block"></span>
+          <span style="font-size:.65em; color:#ffa39e">Not Run — pending execution</span>
+        </div>
+        <div style="display:flex; align-items:center; gap:10px; margin:6px 0">
+          <span style="background:#d9d9d9; width:14px; height:14px; border-radius:50%; display:inline-block"></span>
+          <span style="font-size:.65em; color:#bbb">Skipped — deferred or N/A</span>
+        </div>
+      </div>
+      <div class="highlight-box">
+        <p>All execution results are stored with timestamp, user, session ID, and build version for full traceability.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════════════
+     SECTION HEADER — DOCX
+═══════════════════════════════════════════════════════════════════ -->
+<section class="section-header">
+  <div class="section-num">06</div>
+  <h2>ISO DOCX Documentation</h2>
+  <p>Extreme Networks standard test plan format — auto-generated</p>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════════════
+     SLIDE 12 — DOCX Generation
+═══════════════════════════════════════════════════════════════════ -->
+<section>
+  <h2>Stage 7 — ISO Format DOCX Export</h2>
+  <div class="two-col">
+    <div>
+      <h3>📄 DOCX Document Structure</h3>
+      <ul style="list-style:none; padding:0">
+        <li style="font-size:.62em; padding:2px 0; color:#A8DADC">📌 Title: "EXOS Functional Test Plan"</li>
+        <li style="font-size:.62em; padding:2px 0; color:#ccc">   Release Information table (story, author, version, date)</li>
+        <li style="font-size:.62em; padding:2px 0; color:#ccc">   Revision History table</li>
+        <li style="font-size:.62em; padding:2px 0; color:#A8DADC">📋 Section 1: Introduction (Overview, Use Cases, Terminology)</li>
+        <li style="font-size:.62em; padding:2px 0; color:#A8DADC">🌐 Section 2: Topology (placeholder)</li>
+        <li style="font-size:.62em; padding:2px 0; color:#A8DADC">⚙️ Section 3: Set up and Configurations</li>
+        <li style="font-size:.62em; padding:2px 0; color:#A8DADC">🔧 Section 4: Tools (IXIA, RADIUS)</li>
+        <li style="font-size:.62em; padding:2px 0; color:#ffd666">📝 Section 5: Test Cases — 15 sub-sections (5.1–5.15)</li>
+        <li style="font-size:.62em; padding:2px 0; color:#ccc">   Each TC: methodology, pass criteria, sanity flag</li>
+        <li style="font-size:.62em; padding:2px 0; color:#A8DADC">📎 Section 6: Appendix A (References)</li>
+        <li style="font-size:.62em; padding:2px 0; color:#A8DADC">📅 Section 7: Appendix B (Meeting Minutes)</li>
+        <li style="font-size:.62em; padding:2px 0; color:#A8DADC">✅ Section 8: Review Meeting Action Items</li>
+      </ul>
+    </div>
+    <div>
+      <h3>🎯 Smart TC Routing to Sections</h3>
+      <p style="font-size:.62em; color:#ccc">Test cases are <strong>automatically routed</strong> to the correct section based on title/description keywords:</p>
+      <div class="code-block" style="margin-top:8px">
+        <span class="code-comment"># Keyword-based routing examples</span><br>
+        <span class="code-str">"reboot"</span> / <span class="code-str">"restart"</span> → <span class="code-val">5.6 Redundancy</span><br>
+        <span class="code-str">"cli"</span> / <span class="code-str">"configure"</span> → <span class="code-val">5.4 CLI Config</span><br>
+        <span class="code-str">"snmp"</span> / <span class="code-str">"mib"</span>     → <span class="code-val">5.5 SNMP MIB</span><br>
+        <span class="code-str">"negative"</span> / <span class="code-str">"invalid"</span>→ <span class="code-val">5.14 Negative</span><br>
+        <span class="code-str">"stress"</span> / <span class="code-str">"memory"</span> → <span class="code-val">5.15 Stress</span><br>
+        <span class="code-comment"># Default (no match):</span>  → <span class="code-val">5.2 Feature Spec</span>
+      </div>
+      <div class="highlight-box">
+        <p>Empty sections are never omitted — they show a "—" placeholder so the document always conforms to the complete 15-section Extreme Networks FTP template.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════════════
+     SECTION HEADER — Admin
+═══════════════════════════════════════════════════════════════════ -->
+<section class="section-header">
+  <div class="section-num">07</div>
+  <h2>Admin &amp; Observability</h2>
+  <p>Full visibility into every action, user, and workflow</p>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════════════
+     SLIDE 13 — Admin Dashboard
+═══════════════════════════════════════════════════════════════════ -->
+<section>
+  <h2>Admin Dashboard — 6 Tabs</h2>
+  <div class="cards three">
+    <div class="card">
+      <h4>⚡ Overview</h4>
+      <p>Total users, workflows, active/completed counts, TC pass rate, stage distribution chart, 30-day activity trend, recent actions feed.</p>
+    </div>
+    <div class="card">
+      <h4>📜 Audit Logs</h4>
+      <p>Every action logged: generate, approve, edit, delete, login/logout. Grouped by workflow. Filterable by action type, user, date range.</p>
+    </div>
+    <div class="card">
+      <h4>👥 Users</h4>
+      <p>18 SQA users pre-loaded. Create, edit, delete. Role management (admin/user). Password reset. Bulk creation support.</p>
+    </div>
+    <div class="card">
+      <h4>🌿 Workflows</h4>
+      <p>Full list with TC count, pass rate, audit count, stage, status. Search by title or Jira story. Delete with cascade.</p>
+    </div>
+    <div class="card">
+      <h4>🖥️ System</h4>
+      <p>Node.js version, uptime, memory/CPU, OS info, DB file size, uploads storage. Live refresh.</p>
+    </div>
+    <div class="card">
+      <h4>🐛 System Tests</h4>
+      <p>23 automated health checks: 12 API tests + 11 server-side checks. Run All / per category / per test. Pass/fail with response details.</p>
+    </div>
+  </div>
+  <div class="stats-row" style="margin-top:12px">
+    <div class="stat-box"><span class="num">18</span><span class="lbl">SQA Team Users</span></div>
+    <div class="stat-box"><span class="num">23</span><span class="lbl">System Health Tests</span></div>
+    <div class="stat-box"><span class="num">100%</span><span class="lbl">Audit Coverage</span></div>
+    <div class="stat-box"><span class="num">RBAC</span><span class="lbl">Role-Based Access</span></div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════════════
+     SECTION HEADER — Robustness
+═══════════════════════════════════════════════════════════════════ -->
+<section class="section-header">
+  <div class="section-num">08</div>
+  <h2>Robustness &amp; Quality</h2>
+  <p>Built to be reliable, auditable, and maintainable</p>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════════════
+     SLIDE 14 — Robustness
+═══════════════════════════════════════════════════════════════════ -->
+<section>
+  <h2>System Robustness</h2>
+  <div class="two-col">
+    <div>
+      <h3>🛡️ Security</h3>
+      <ul class="check-list">
+        <li>JWT Bearer token authentication on all API routes</li>
+        <li>bcryptjs password hashing (no plain-text storage)</li>
+        <li>Role-based access: admin routes reject non-admins</li>
+        <li>Stage 3+ locked until Skill File approved</li>
+        <li>Input validation at all API boundaries</li>
+        <li>OWASP-aware: no SQL injection (parameterised queries)</li>
+      </ul>
+      <h3>🔄 Error Handling</h3>
+      <ul class="check-list">
+        <li>Graceful LLM fallback (GitHub Models → Ollama)</li>
+        <li>BOM-safe Python stdin parsing for DOCX generation</li>
+        <li>Streaming abort on client disconnect</li>
+        <li>Stage gate validation before progression</li>
+      </ul>
+    </div>
+    <div>
+      <h3>🧪 System Tests (23 Checks)</h3>
+      <p style="font-size:.62em; color:#aaa">Automated health check suite in Admin → System Tests:</p>
+      <ul class="check-list" style="margin-top:6px">
+        <li>API server reachable (GET /health)</li>
+        <li>Valid login accepted / invalid rejected</li>
+        <li>Session token validation</li>
+        <li>All workflow API fields present</li>
+        <li>Stage 9 summary report structure</li>
+        <li>Database connection &amp; all required tables</li>
+        <li>Admin user exists in DB</li>
+        <li>DB file on disk (with size check)</li>
+        <li>Uploads directory writable</li>
+        <li>Python DOCX script present</li>
+        <li>Node.js version ≥ 14</li>
+        <li>Server memory not critically low</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════════════
+     SLIDE 15 — Evaluation / Quality Metrics
+═══════════════════════════════════════════════════════════════════ -->
+<section>
+  <h2>Evaluation &amp; Quality Metrics</h2>
+  <div class="two-col">
+    <div>
+      <h3>📏 Test Plan Quality Criteria</h3>
+      <table class="data-table">
+        <thead><tr><th>Criterion</th><th>Target</th></tr></thead>
+        <tbody>
+          <tr><td>TCs cover all 15 standard sections</td><td><span class="tag tag-green">Mandatory</span></td></tr>
+          <tr><td>Every TC has &gt;3 methodology steps</td><td><span class="tag tag-green">Required</span></td></tr>
+          <tr><td>Pass criteria explicitly stated</td><td><span class="tag tag-green">Required</span></td></tr>
+          <tr><td>CLI commands in test steps</td><td><span class="tag tag-gold">Recommended</span></td></tr>
+          <tr><td>Negative &amp; boundary tests included</td><td><span class="tag tag-green">Required</span></td></tr>
+          <tr><td>Topology reference per TC</td><td><span class="tag tag-gold">Recommended</span></td></tr>
+          <tr><td>Classification accuracy ≥ 90%</td><td><span class="tag tag-green">Target</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div>
+      <h3>📈 Observability</h3>
+      <ul class="check-list">
+        <li>Full audit trail: every action timestamped</li>
+        <li>Per-workflow TC pass rate tracked</li>
+        <li>Stage progression tracked in DB</li>
+        <li>Execution sessions with build version</li>
+        <li>Document version history</li>
+        <li>User activity feed in Admin</li>
+      </ul>
+      <h3>🔧 Maintainability</h3>
+      <ul class="check-list">
+        <li>Guidelines-driven AI prompts (EVAL file)</li>
+        <li>TC section routing via keyword config (easy to extend)</li>
+        <li>Stage routes are independent modules</li>
+        <li>SQLite — zero DBA overhead, portable</li>
+        <li>Single-file Python DOCX generator (easy to update format)</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════════════
+     SLIDE 16 — Live Demo Flow
+═══════════════════════════════════════════════════════════════════ -->
+<section>
+  <h2>Live Demo Flow</h2>
+  <div class="two-col wide-left">
+    <div>
+      <ul class="timeline">
+        <li>
+          <div class="tl-num">1</div>
+          <div class="tl-body">
+            <h5>Dashboard → Create Workflow</h5>
+            <p>Select EXOS 34.1 release → pick EXOS-39635 (SNMPv3 SHA-256) → create workflow</p>
+          </div>
+        </li>
+        <li>
+          <div class="tl-num">2</div>
+          <div class="tl-body">
+            <h5>Stage 2 → Skill File Generation</h5>
+            <p>AI generates feature knowledge doc → review → approve (unlocks Stage 3)</p>
+          </div>
+        </li>
+        <li>
+          <div class="tl-num">3</div>
+          <div class="tl-body">
+            <h5>Stage 3 → Test Plan</h5>
+            <p>AI generates 20+ test cases in Markdown → stream display → save</p>
+          </div>
+        </li>
+        <li>
+          <div class="tl-num">4</div>
+          <div class="tl-body">
+            <h5>Stage 4 → Classify TCs</h5>
+            <p>AI auto-classifies → view Manual/Semi/Auto breakdown → bulk approve</p>
+          </div>
+        </li>
+        <li>
+          <div class="tl-num">5</div>
+          <div class="tl-body">
+            <h5>Stage 8 → Execute TCs</h5>
+            <p>Record Pass/Fail/Blocked per TC → live pie chart updates</p>
+          </div>
+        </li>
+        <li>
+          <div class="tl-num">6</div>
+          <div class="tl-body">
+            <h5>Stage 9 → Download ISO DOCX</h5>
+            <p>Enter author name → Download → Open Word doc with all 15 sections</p>
+          </div>
+        </li>
+        <li>
+          <div class="tl-num">7</div>
+          <div class="tl-body">
+            <h5>Admin → System Tests</h5>
+            <p>Run All Tests → 23/23 pass → system healthy ✓</p>
+          </div>
+        </li>
+      </ul>
+    </div>
+    <div>
+      <h3>🌐 Access</h3>
+      <div class="code-block">
+        <span class="code-comment"># Production server</span><br>
+        <span class="code-key">URL:</span>  <span class="code-str">http://10.127.26.9:5101</span><br>
+        <span class="code-key">Admin:</span> <span class="code-val">extreme / extreme</span><br>
+        <span class="code-key">Users:</span> <span class="code-val">username / extreme</span><br><br>
+        <span class="code-comment"># Available users</span><br>
+        <span class="code-val">sadurai, slakshmanan, gsridharan</span><br>
+        <span class="code-val">hramaiah, skandaswamy, spalanivel</span><br>
+        <span class="code-val">... 18 total SQA team members</span>
+      </div>
+      <div class="highlight-box" style="margin-top:12px">
+        <p>💡 <strong>Tip for demo:</strong> Start from the SNMPv3 SHA-256 workflow already at Stage 9 — it has 21 classified test cases ready to view and download as DOCX.</p>
+      </div>
+      <h3 style="margin-top:16px">📁 Existing Data</h3>
+      <ul class="check-list">
+        <li>1 completed workflow (EXOS-39635)</li>
+        <li>21 classified test cases</li>
+        <li>ISO DOCX already generated</li>
+        <li>18 user accounts active</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════════════
+     SLIDE 17 — Summary
+═══════════════════════════════════════════════════════════════════ -->
+<section class="center-all">
+  <h2 style="text-align:center">What We Built</h2>
+  <div class="cards three" style="margin-top:16px">
+    <div class="card" style="text-align:center">
+      <span class="card-icon">🚀</span>
+      <h4>AI-Accelerated</h4>
+      <p>GPT-4o generates skill files, test plans, TC classifications &amp; TCL scripts automatically</p>
+    </div>
+    <div class="card" style="text-align:center">
+      <span class="card-icon">📄</span>
+      <h4>ISO Compliant</h4>
+      <p>Auto-generates Extreme Networks standard DOCX with all 15 mandatory test sections</p>
+    </div>
+    <div class="card" style="text-align:center">
+      <span class="card-icon">🔗</span>
+      <h4>Fully Integrated</h4>
+      <p>Jira + qTest + FA Portal. All 18 SQA team members have accounts.</p>
+    </div>
+    <div class="card" style="text-align:center">
+      <span class="card-icon">👁️</span>
+      <h4>Full Observability</h4>
+      <p>Complete audit trail, admin dashboard, 23-test health check suite</p>
+    </div>
+    <div class="card" style="text-align:center">
+      <span class="card-icon">🔒</span>
+      <h4>Secure</h4>
+      <p>JWT auth, bcrypt passwords, role-based access, stage gates</p>
+    </div>
+    <div class="card" style="text-align:center">
+      <span class="card-icon">⚡</span>
+      <h4>Production Ready</h4>
+      <p>Live at 10.127.26.9 · SQLite DB · Node.js backend · React frontend</p>
+    </div>
+  </div>
+  <div class="stats-row" style="margin-top:20px">
+    <div class="stat-box"><span class="num">7</span><span class="lbl">Workflow Stages</span></div>
+    <div class="stat-box"><span class="num">15</span><span class="lbl">ISO TC Sections</span></div>
+    <div class="stat-box"><span class="num">18</span><span class="lbl">Team Users</span></div>
+    <div class="stat-box"><span class="num">23</span><span class="lbl">Health Checks</span></div>
+    <div class="stat-box"><span class="num">GPT-4o</span><span class="lbl">AI Engine</span></div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════════════
+     SLIDE 18 — Thank You
+═══════════════════════════════════════════════════════════════════ -->
+<section class="title-slide" data-background-gradient="linear-gradient(135deg,#0a1628,#1D3557,#457B9D)">
+  <div class="logo-box">
+    <span class="logo-text">NOS QA Workflow</span>
+  </div>
+  <h1 style="font-size:1.8em">Thank You</h1>
+  <p class="subtitle">Questions? Let's look at the live tool.</p>
+  <div class="code-block" style="display:inline-block; margin-top:20px; text-align:left; min-width:300px">
+    <span class="code-key">Demo URL:</span> <span class="code-str">http://10.127.26.9:5101</span><br>
+    <span class="code-key">Admin:</span>    <span class="code-val">extreme / extreme</span><br>
+    <span class="code-key">Backend:</span>  <span class="code-val">http://10.127.26.9:5100/api</span>
+  </div>
+  <p class="meta" style="margin-top:24px">SQA Team · Extreme Networks · July 2026</p>
+</section>
+
+</div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.js"></script>
+<script>
+  Reveal.initialize({
+    hash: true,
+    slideNumber: 'c/t',
+    progress: true,
+    controls: true,
+    center: true,
+    transition: 'slide',
+    transitionSpeed: 'fast',
+    backgroundTransition: 'fade',
+    width: 1200,
+    height: 700,
+    margin: 0.04,
+    plugins: [],
+    keyboard: {
+      // Arrow keys + spacebar default navigation
+      39: 'navigateRight',
+      37: 'navigateLeft',
+    }
+  });
+</script>
+</body>
+</html>

@@ -1,0 +1,229 @@
+{
+  "version": "2.0",
+  "description": "EXOS Functional Test Plan Standards Configuration",
+  "lastUpdated": "2026-07-25",
+  
+  "format": {
+    "description": "Test plan format standards",
+    "testCaseNumbering": {
+      "pattern": "5.x.x.x",
+      "regex": "^5\\.\\d+\\.\\d+\\.\\d+",
+      "description": "Test cases must use 5.x.x.x numbering scheme"
+    },
+    "sectionHeaders": {
+      "required": ["Methodology", "Pass Criteria"],
+      "deprecated": ["Test Steps", "Expected Results", "Test Procedure", "Expected Outcome"],
+      "description": "Use Methodology and Pass Criteria headers, not deprecated alternatives"
+    },
+    "cliCommands": {
+      "prefix": "CLI :",
+      "format": "CLI : #command",
+      "description": "CLI commands must use 'CLI :' prefix with space"
+    },
+    "examples": {
+      "prefix": "Eg :",
+      "description": "Examples in Pass Criteria must use 'Eg :' prefix"
+    },
+    "stepFormat": {
+      "style": "lettered",
+      "pattern": "^[a-z]\\.",
+      "description": "Methodology steps use lettered format (a., b., c.)"
+    },
+    "priorityValues": ["P1", "P2", "P3"],
+    "sanityValues": ["Yes", "No"]
+  },
+  
+  "structure": {
+    "description": "Required document structure",
+    "requiredSections": [
+      {
+        "name": "Introduction",
+        "level": 2,
+        "required": true,
+        "description": "Feature overview, objectives, JIRA references"
+      },
+      {
+        "name": "Test Environment",
+        "level": 2,
+        "required": true,
+        "description": "Setup requirements, topology, devices"
+      },
+      {
+        "name": "Prerequisites",
+        "level": 2,
+        "required": true,
+        "description": "Software versions, configurations, tools"
+      },
+      {
+        "name": "Test Topology",
+        "level": 2,
+        "required": true,
+        "description": "Network topology diagram and description"
+      },
+      {
+        "name": "Test Cases",
+        "level": 2,
+        "required": true,
+        "description": "Detailed test case specifications"
+      }
+    ],
+    "optionalSections": [
+      {
+        "name": "Appendix",
+        "level": 2,
+        "description": "CLI reference, acronyms, additional notes"
+      }
+    ]
+  },
+  
+  "testCase": {
+    "description": "Individual test case requirements",
+    "requiredFields": [
+      "Topology used",
+      "Methodology",
+      "Pass Criteria",
+      "Priority",
+      "Sanity"
+    ],
+    "optionalFields": [
+      "Preconditions",
+      "Dependencies",
+      "Notes"
+    ],
+    "format": {
+      "title": "5.x.x.x      Test Case Title",
+      "spacing": "6 spaces after number",
+      "description": "Test case number followed by 6 spaces and descriptive title"
+    }
+  },
+  
+  "quality": {
+    "description": "Quality requirements and thresholds",
+    "minTestCases": 5,
+    "maxTestCases": 500,
+    "sanityDistribution": {
+      "min": 30,
+      "max": 70,
+      "description": "30-70% of tests should be marked as Sanity: Yes"
+    },
+    "priorityDistribution": {
+      "p1Min": 20,
+      "p1Max": 60,
+      "description": "20-60% of tests should be P1 priority"
+    },
+    "forbiddenPlaceholders": [
+      "TBD",
+      "TODO",
+      "[Fill in]",
+      "XXX",
+      "placeholder",
+      "FIXME",
+      "To be determined",
+      "To be filled"
+    ],
+    "requiredCoverage": {
+      "basicFunctionality": true,
+      "negativeTests": true,
+      "edgeCases": true,
+      "description": "Must include basic, negative, and edge case testing"
+    }
+  },
+  
+  "validation": {
+    "description": "Validation thresholds and rules",
+    "scoringWeights": {
+      "structure": 20,
+      "format": 25,
+      "testCases": 30,
+      "quality": 25
+    },
+    "passingScore": 60,
+    "excellentScore": 90,
+    "autoRegenerateThreshold": 40,
+    "criticalIssues": [
+      "missing_required_sections",
+      "insufficient_test_cases",
+      "placeholder_text_found",
+      "invalid_numbering_scheme",
+      "missing_sanity_flags"
+    ]
+  },
+  
+  "llm": {
+    "description": "LLM configuration for test plan generation",
+    "defaultModel": "claude-opus-4-8",
+    "fallbackModel": "claude-sonnet-4-6",
+    "parameters": {
+      "temperature": 0.3,
+      "maxTokens": 16000,
+      "topP": 0.95,
+      "description": "Conservative settings for consistent output"
+    },
+    "promptVersion": "2.0",
+    "systemPromptChecksum": null
+  },
+  
+  "excel": {
+    "description": "Excel export format (Switch Engine standard)",
+    "format": "9-column",
+    "columns": [
+      "Project",
+      "Test Suite Path",
+      "Test Case Title",
+      "Summary",
+      "Preconditions",
+      "Step Actions",
+      "Expected Results",
+      "Priority",
+      "Keywords"
+    ],
+    "projectName": "Firmware",
+    "testSuiteFormat": "XOS_Platform.BCM/{Feature}/5_Testcases/5.X.X_{Category}"
+  },
+  
+  "word": {
+    "description": "Word document export format",
+    "template": "EXOS Functional Test Plan",
+    "fonts": {
+      "title": "Arial 16pt Bold",
+      "heading1": "Arial 14pt Bold",
+      "heading2": "Arial 12pt Bold",
+      "body": "Arial 11pt",
+      "code": "Courier New 10pt"
+    },
+    "colors": {
+      "testCaseTitle": "#0066CC",
+      "headers": "#000000",
+      "cli": "#008000"
+    }
+  },
+  
+  "versionControl": {
+    "description": "Document version control settings",
+    "versionFormat": "major.minor.patch",
+    "trackChanges": true,
+    "requireApproval": true,
+    "approvalRoles": ["qa_lead", "engineering_manager"],
+    "retentionPolicy": {
+      "keepVersions": 10,
+      "archiveAfterDays": 90
+    }
+  },
+  
+  "auditTrail": {
+    "description": "Audit logging configuration",
+    "logGenerations": true,
+    "logValidations": true,
+    "logNormalizations": true,
+    "logApprovals": true,
+    "retentionDays": 365,
+    "includeMetadata": [
+      "llm_model",
+      "llm_version",
+      "user_id",
+      "timestamp",
+      "validation_score",
+      "changes_made"
+    ]
+  }
+}

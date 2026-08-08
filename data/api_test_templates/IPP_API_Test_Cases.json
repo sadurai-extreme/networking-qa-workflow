@@ -1,0 +1,261 @@
+{
+  "testSuite": {
+    "name": "IPP RATE_LIMIT_BROADCAST API Tests",
+    "feature": "EXOS-39560",
+    "baseUrl": "https://switch-ip",
+    "description": "REST API test cases for IPP Rate Limit Broadcast feature",
+    "tags": ["ipp", "rate-limit", "policy", "api"],
+    "setup": {
+      "cleanupProfiles": true,
+      "cleanupRules": true
+    }
+  },
+  "tests": [
+    {
+      "id": "TC-API-001",
+      "name": "Create IPP Profile with Rate Limit - Success",
+      "description": "Verify profile creation via REST API with rate-limit-broadcast parameter",
+      "method": "POST",
+      "endpoint": "/rest/restconf/data/openconfig-policy-v3:policy/profiles/profile",
+      "data": {
+        "profile-name": "TestProfile_API",
+        "pvid": 100,
+        "cos": 0,
+        "egress-vlans": "100",
+        "forbidden-vlans": "1",
+        "rate-limit-broadcast": 1000
+      },
+      "options": {
+        "assertions": [
+          {
+            "type": "status",
+            "expected": 201,
+            "description": "Profile created successfully"
+          },
+          {
+            "type": "jsonPathExists",
+            "path": "profile-name",
+            "description": "Profile name returned"
+          }
+        ]
+      }
+    },
+    {
+      "id": "TC-API-002",
+      "name": "Get IPP Profile Details",
+      "description": "Retrieve profile configuration including rate limit",
+      "method": "GET",
+      "endpoint": "/rest/restconf/data/openconfig-policy-v3:policy/profiles/profile=TestProfile_API",
+      "options": {
+        "assertions": [
+          {
+            "type": "status",
+            "expected": 200,
+            "description": "Profile retrieved successfully"
+          },
+          {
+            "type": "jsonPath",
+            "path": "profile.rate-limit-broadcast",
+            "expected": 1000,
+            "description": "Rate limit value correct"
+          },
+          {
+            "type": "jsonPath",
+            "path": "profile.pvid",
+            "expected": 100,
+            "description": "PVID correct"
+          }
+        ]
+      }
+    },
+    {
+      "id": "TC-API-003",
+      "name": "Update IPP Profile Rate Limit",
+      "description": "Modify rate limit value via PUT",
+      "method": "PUT",
+      "endpoint": "/rest/restconf/data/openconfig-policy-v3:policy/profiles/profile=TestProfile_API",
+      "data": {
+        "profile-name": "TestProfile_API",
+        "pvid": 100,
+        "cos": 0,
+        "egress-vlans": "100",
+        "forbidden-vlans": "1",
+        "rate-limit-broadcast": 2000
+      },
+      "options": {
+        "assertions": [
+          {
+            "type": "statusRange",
+            "expected": [200, 204],
+            "description": "Profile updated successfully"
+          }
+        ]
+      }
+    },
+    {
+      "id": "TC-API-004",
+      "name": "Create IPP Rule with Profile",
+      "description": "Assign profile to port via policy rule",
+      "method": "POST",
+      "endpoint": "/rest/restconf/data/openconfig-policy-v3:policy/rules/rule",
+      "data": {
+        "rule-name": "TestRule_API",
+        "profile-name": "TestProfile_API",
+        "match-type": "mac-source",
+        "mac-address": "00:11:22:33:44:55",
+        "mac-mask": 48,
+        "ports": ["1:1"]
+      },
+      "options": {
+        "assertions": [
+          {
+            "type": "status",
+            "expected": 201,
+            "description": "Rule created successfully"
+          }
+        ]
+      }
+    },
+    {
+      "id": "TC-API-005",
+      "name": "Verify Port Rate Limit Applied",
+      "description": "Check if rate limit actually applied to port (EXOS-39560 bug check)",
+      "method": "GET",
+      "endpoint": "/rest/restconf/data/openconfig-port:ports/port=1:1/state",
+      "options": {
+        "assertions": [
+          {
+            "type": "status",
+            "expected": 200,
+            "description": "Port state retrieved"
+          },
+          {
+            "type": "jsonPathExists",
+            "path": "state.rate-limit.broadcast",
+            "description": "Broadcast rate limit present in port config"
+          },
+          {
+            "type": "jsonPath",
+            "path": "state.rate-limit.broadcast.rate",
+            "expected": 2000,
+            "description": "Rate limit value matches profile (BUG: May fail in 33.7.0.96)"
+          }
+        ]
+      }
+    },
+    {
+      "id": "TC-API-006",
+      "name": "Create Profile - Invalid Rate Limit",
+      "description": "Negative test - rate limit out of range",
+      "method": "POST",
+      "endpoint": "/rest/restconf/data/openconfig-policy-v3:policy/profiles/profile",
+      "data": {
+        "profile-name": "InvalidProfile",
+        "pvid": 100,
+        "rate-limit-broadcast": 2000000
+      },
+      "options": {
+        "assertions": [
+          {
+            "type": "statusRange",
+            "expected": [400, 499],
+            "description": "Request rejected with client error"
+          }
+        ]
+      }
+    },
+    {
+      "id": "TC-API-007",
+      "name": "Create Profile - Multiple Rate Limits",
+      "description": "Profile with all three rate limit types",
+      "method": "POST",
+      "endpoint": "/rest/restconf/data/openconfig-policy-v3:policy/profiles/profile",
+      "data": {
+        "profile-name": "MultiRateLimit",
+        "pvid": 200,
+        "rate-limit-broadcast": 1000,
+        "rate-limit-multicast": 500,
+        "rate-limit-unknown-destmac": 2000
+      },
+      "options": {
+        "assertions": [
+          {
+            "type": "status",
+            "expected": 201,
+            "description": "Profile with multiple rate limits created"
+          }
+        ]
+      }
+    },
+    {
+      "id": "TC-API-008",
+      "name": "Delete IPP Profile",
+      "description": "Remove profile via DELETE",
+      "method": "DELETE",
+      "endpoint": "/rest/restconf/data/openconfig-policy-v3:policy/profiles/profile=TestProfile_API",
+      "options": {
+        "assertions": [
+          {
+            "type": "statusRange",
+            "expected": [200, 204],
+            "description": "Profile deleted successfully"
+          }
+        ]
+      }
+    },
+    {
+      "id": "TC-API-009",
+      "name": "Get Deleted Profile - Not Found",
+      "description": "Verify profile no longer exists",
+      "method": "GET",
+      "endpoint": "/rest/restconf/data/openconfig-policy-v3:policy/profiles/profile=TestProfile_API",
+      "options": {
+        "assertions": [
+          {
+            "type": "status",
+            "expected": 404,
+            "description": "Profile not found"
+          }
+        ]
+      }
+    },
+    {
+      "id": "TC-API-010",
+      "name": "List All IPP Profiles",
+      "description": "Retrieve all profiles via GET",
+      "method": "GET",
+      "endpoint": "/rest/restconf/data/openconfig-policy-v3:policy/profiles",
+      "options": {
+        "assertions": [
+          {
+            "type": "status",
+            "expected": 200,
+            "description": "Profiles list retrieved"
+          },
+          {
+            "type": "jsonPathExists",
+            "path": "profiles",
+            "description": "Profiles array exists"
+          }
+        ]
+      }
+    }
+  ],
+  "cleanup": [
+    {
+      "name": "Delete Test Rule",
+      "method": "DELETE",
+      "endpoint": "/rest/restconf/data/openconfig-policy-v3:policy/rules/rule=TestRule_API"
+    },
+    {
+      "name": "Delete Test Profile",
+      "method": "DELETE",
+      "endpoint": "/rest/restconf/data/openconfig-policy-v3:policy/profiles/profile=TestProfile_API"
+    },
+    {
+      "name": "Delete Multi Rate Limit Profile",
+      "method": "DELETE",
+      "endpoint": "/rest/restconf/data/openconfig-policy-v3:policy/profiles/profile=MultiRateLimit"
+    }
+  ]
+}

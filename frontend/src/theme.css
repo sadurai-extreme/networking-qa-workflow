@@ -1,0 +1,682 @@
+/* EXOS QA Dashboard Theme - Matching Feature Dashboard Design */
+
+/* Color Variables */
+:root {
+  --navy-dark: #1a2541;
+  --navy-border: #2d3a54;
+  --teal-primary: #17a2b8;
+  --teal-dark: #138496;
+  --teal-light: #20c997;
+  --purple-accent: #8b7fcc;
+  --bg-light: #f5f7fa;
+  --text-light: #8b9ab8;
+  --text-dark: #2c3e50;
+}
+
+/* Override Ant Design Sidebar Dark Theme */
+.ant-layout-sider {
+  background: var(--navy-dark) !important;
+}
+
+.ant-menu-dark {
+  background: var(--navy-dark) !important;
+}
+
+.ant-menu-dark .ant-menu-item {
+  color: #c9d1e0;
+}
+
+.ant-menu-dark .ant-menu-item-selected {
+  background: rgba(23, 162, 184, 0.15) !important;
+  color: #17a2b8 !important;
+  border-left: 3px solid #17a2b8;
+  padding-left: 21px !important;
+}
+
+.ant-menu-dark .ant-menu-item:hover {
+  background: rgba(255, 255, 255, 0.05) !important;
+  color: #fff !important;
+}
+
+.ant-menu-dark .ant-menu-item-disabled {
+  color: #5a6680 !important;
+  opacity: 0.6;
+}
+
+.ant-menu-dark .ant-menu-item::before {
+  content: '●';
+  color: var(--purple-accent);
+  margin-right: 8px;
+  font-size: 8px;
+  vertical-align: middle;
+}
+
+.ant-menu-dark .ant-menu-item-selected::before {
+  color: var(--teal-primary);
+}
+
+/* Primary Button Teal Theme */
+.ant-btn-primary {
+  background: var(--teal-primary) !important;
+  border-color: var(--teal-primary) !important;
+}
+
+.ant-btn-primary:hover {
+  background: var(--teal-dark) !important;
+  border-color: var(--teal-dark) !important;
+}
+
+/* Card Headers with Teal */
+.dashboard-card-header {
+  background: var(--teal-primary);
+  color: white;
+  padding: 12px 20px;
+  font-weight: 600;
+  font-size: 14px;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  border-radius: 8px 8px 0 0;
+}
+
+/* Page Header Banner */
+.page-header-banner {
+  background: linear-gradient(135deg, #2d3e5f 0%, #1a2541 100%);
+  padding: 24px 32px;
+  margin: 0;
+  border-bottom: 3px solid var(--teal-primary);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.page-header-title {
+  color: white;
+  font-size: 24px;
+  font-weight: 600;
+  margin: 0;
+  line-height: 1.3;
+}
+
+.page-header-subtitle {
+  color: var(--text-light);
+  font-size: 14px;
+  margin: 4px 0 0 0;
+}
+
+/* Statistics Cards */
+.stat-card {
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  border: 1px solid #e8edf3;
+  transition: all 0.3s ease;
+}
+
+.stat-card:hover {
+  box-shadow: 0 4px 12px rgba(23, 162, 184, 0.15);
+  transform: translateY(-2px);
+}
+
+.stat-card-header {
+  background: var(--teal-primary);
+  color: white;
+  padding: 10px 16px;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+  border-radius: 8px 8px 0 0;
+}
+
+.stat-card-body {
+  padding: 24px 16px;
+  text-align: center;
+}
+
+.stat-value {
+  font-size: 36px;
+  font-weight: 700;
+  color: var(--teal-primary);
+  line-height: 1;
+  margin-bottom: 8px;
+}
+
+.stat-label {
+  font-size: 12px;
+  color: #6c757d;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  font-weight: 500;
+}
+
+/* Tag Colors */
+.ant-tag-success {
+  background: #d4edda;
+  border-color: #c3e6cb;
+  color: #155724;
+}
+
+.ant-tag-processing {
+  background: #cce5ff;
+  border-color: #b8daff;
+  color: #004085;
+}
+
+.ant-tag-warning {
+  background: #fff3cd;
+  border-color: #ffeaa7;
+  color: #856404;
+}
+
+/* Badge Colors */
+.ant-badge-status-success {
+  background: var(--teal-light);
+}
+
+.ant-badge-status-processing {
+  background: var(--teal-primary);
+}
+
+/* Table Styling */
+.ant-table {
+  background: white;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.ant-table-thead > tr > th {
+  background: #f8f9fa;
+  color: var(--text-dark);
+  font-weight: 600;
+  border-bottom: 2px solid var(--teal-primary);
+}
+
+.ant-table-tbody > tr:hover > td {
+  background: rgba(23, 162, 184, 0.05) !important;
+}
+
+/* Action Buttons */
+.action-button-group {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+.action-button-teal {
+  background: var(--teal-primary);
+  border-color: var(--teal-primary);
+  color: white;
+  font-weight: 500;
+  border-radius: 6px;
+  padding: 8px 20px;
+  height: auto;
+  transition: all 0.3s ease;
+}
+
+.action-button-teal:hover {
+  background: var(--teal-dark);
+  border-color: var(--teal-dark);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(23, 162, 184, 0.3);
+}
+
+/* Progress Bar Styling */
+.ant-steps-item-process > .ant-steps-item-container > .ant-steps-item-icon {
+  background: var(--teal-primary);
+  border-color: var(--teal-primary);
+}
+
+.ant-steps-item-finish .ant-steps-item-icon {
+  border-color: var(--teal-light);
+}
+
+.ant-steps-item-finish .ant-steps-item-icon > .ant-steps-icon {
+  color: var(--teal-light);
+}
+
+/* Modal Styling */
+.ant-modal-header {
+  background: var(--navy-dark);
+  color: white;
+  border-bottom: 3px solid var(--teal-primary);
+}
+
+.ant-modal-title {
+  color: white !important;
+}
+
+.ant-modal-close {
+  color: white !important;
+}
+
+.ant-modal-close:hover {
+  color: var(--teal-light) !important;
+}
+
+/* Select Dropdown */
+.ant-select-selector {
+  border-radius: 6px !important;
+}
+
+.ant-select-focused .ant-select-selector {
+  border-color: var(--teal-primary) !important;
+  box-shadow: 0 0 0 2px rgba(23, 162, 184, 0.1) !important;
+}
+
+/* Input Focus */
+.ant-input:focus, .ant-input-focused {
+  border-color: var(--teal-primary);
+  box-shadow: 0 0 0 2px rgba(23, 162, 184, 0.1);
+}
+
+/* Card Styling */
+.ant-card {
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+
+.ant-card-head {
+  background: linear-gradient(135deg, #2d3e5f 0%, #1a2541 100%);
+  color: white;
+  border-bottom: 3px solid var(--teal-primary);
+}
+
+.ant-card-head-title {
+  color: white;
+}
+
+/* Scrollbar Styling */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f3f5;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--teal-primary);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--teal-dark);
+}
+
+/* ============================================ */
+/* DARK MODE STYLES */
+/* ============================================ */
+
+/* Dark Mode Color Variables */
+body.dark-mode {
+  --dark-bg-primary: #0d1117;
+  --dark-bg-secondary: #161b22;
+  --dark-bg-tertiary: #1f2937;
+  --dark-border: #30363d;
+  --dark-text-primary: #e6edf3;
+  --dark-text-secondary: #8b949e;
+  --dark-card-bg: #161b22;
+  --dark-hover-bg: #1f2937;
+}
+
+/* Dark Mode - Global Background */
+body.dark-mode {
+  background: var(--dark-bg-primary);
+  color: var(--dark-text-primary);
+}
+
+/* Dark Mode - Layout Background */
+body.dark-mode .ant-layout {
+  background: var(--dark-bg-primary) !important;
+}
+
+body.dark-mode .ant-layout-content {
+  background: var(--dark-bg-primary) !important;
+}
+
+/* Dark Mode - Cards */
+body.dark-mode .ant-card {
+  background: var(--dark-card-bg);
+  border-color: var(--dark-border);
+}
+
+body.dark-mode .ant-card-head {
+  background: linear-gradient(135deg, #1f2937 0%, #111827 100%);
+  border-bottom-color: var(--teal-primary);
+  color: var(--dark-text-primary);
+}
+
+body.dark-mode .ant-card-head-title {
+  color: var(--dark-text-primary);
+}
+
+body.dark-mode .ant-card-body {
+  color: var(--dark-text-primary);
+}
+
+/* Dark Mode - Stat Cards */
+body.dark-mode .stat-card {
+  background: var(--dark-card-bg);
+  border-color: var(--dark-border);
+}
+
+body.dark-mode .stat-label {
+  color: var(--dark-text-secondary);
+}
+
+/* Dark Mode - Page Header Banner */
+body.dark-mode .page-header-banner {
+  background: linear-gradient(135deg, #1f2937 0%, #111827 100%);
+  border-bottom-color: var(--teal-primary);
+}
+
+body.dark-mode .page-header-title {
+  color: var(--dark-text-primary);
+}
+
+body.dark-mode .page-header-subtitle {
+  color: var(--dark-text-secondary);
+}
+
+/* Dark Mode - Tables */
+body.dark-mode .ant-table {
+  background: var(--dark-card-bg);
+}
+
+body.dark-mode .ant-table-thead > tr > th {
+  background: var(--dark-bg-tertiary);
+  color: var(--dark-text-primary);
+  border-bottom-color: var(--teal-primary);
+}
+
+body.dark-mode .ant-table-tbody > tr > td {
+  background: var(--dark-card-bg);
+  color: var(--dark-text-primary);
+  border-color: var(--dark-border);
+}
+
+body.dark-mode .ant-table-tbody > tr:hover > td {
+  background: var(--dark-hover-bg) !important;
+}
+
+body.dark-mode .ant-table-placeholder {
+  background: var(--dark-card-bg);
+}
+
+body.dark-mode .ant-empty-description {
+  color: var(--dark-text-secondary);
+}
+
+/* Dark Mode - Inputs */
+body.dark-mode .ant-input {
+  background: var(--dark-bg-tertiary);
+  border-color: var(--dark-border);
+  color: var(--dark-text-primary);
+}
+
+body.dark-mode .ant-input:hover,
+body.dark-mode .ant-input:focus,
+body.dark-mode .ant-input-focused {
+  background: var(--dark-bg-tertiary);
+  border-color: var(--teal-primary);
+}
+
+body.dark-mode .ant-input::placeholder {
+  color: var(--dark-text-secondary);
+}
+
+body.dark-mode .ant-input-textarea-show-count::after {
+  color: var(--dark-text-secondary);
+}
+
+/* Dark Mode - Select */
+body.dark-mode .ant-select-selector {
+  background: var(--dark-bg-tertiary) !important;
+  border-color: var(--dark-border) !important;
+  color: var(--dark-text-primary) !important;
+}
+
+body.dark-mode .ant-select-selection-placeholder {
+  color: var(--dark-text-secondary);
+}
+
+body.dark-mode .ant-select-arrow {
+  color: var(--dark-text-secondary);
+}
+
+/* Dark Mode - Dropdown */
+body.dark-mode .ant-select-dropdown {
+  background: var(--dark-bg-tertiary);
+  border-color: var(--dark-border);
+}
+
+body.dark-mode .ant-select-item {
+  color: var(--dark-text-primary);
+}
+
+body.dark-mode .ant-select-item-option-active {
+  background: var(--dark-hover-bg);
+}
+
+body.dark-mode .ant-select-item-option-selected {
+  background: rgba(23, 162, 184, 0.2);
+  color: var(--teal-light);
+}
+
+/* Dark Mode - Modals */
+body.dark-mode .ant-modal-content {
+  background: var(--dark-card-bg);
+}
+
+body.dark-mode .ant-modal-header {
+  background: linear-gradient(135deg, #1f2937 0%, #111827 100%);
+  border-bottom-color: var(--teal-primary);
+}
+
+body.dark-mode .ant-modal-title {
+  color: var(--dark-text-primary) !important;
+}
+
+body.dark-mode .ant-modal-body {
+  background: var(--dark-card-bg);
+  color: var(--dark-text-primary);
+}
+
+body.dark-mode .ant-modal-footer {
+  background: var(--dark-card-bg);
+  border-top-color: var(--dark-border);
+}
+
+/* Dark Mode - Buttons */
+body.dark-mode .ant-btn-default {
+  background: var(--dark-bg-tertiary);
+  border-color: var(--dark-border);
+  color: var(--dark-text-primary);
+}
+
+body.dark-mode .ant-btn-default:hover {
+  background: var(--dark-hover-bg);
+  border-color: var(--teal-primary);
+  color: var(--teal-light);
+}
+
+/* Dark Mode - Alerts */
+body.dark-mode .ant-alert {
+  border-color: var(--dark-border);
+}
+
+body.dark-mode .ant-alert-success {
+  background: rgba(35, 134, 54, 0.15);
+  border-color: rgba(35, 134, 54, 0.3);
+}
+
+body.dark-mode .ant-alert-info {
+  background: rgba(23, 162, 184, 0.15);
+  border-color: rgba(23, 162, 184, 0.3);
+}
+
+body.dark-mode .ant-alert-warning {
+  background: rgba(250, 173, 20, 0.15);
+  border-color: rgba(250, 173, 20, 0.3);
+}
+
+body.dark-mode .ant-alert-error {
+  background: rgba(220, 53, 69, 0.15);
+  border-color: rgba(220, 53, 69, 0.3);
+}
+
+body.dark-mode .ant-alert-message {
+  color: var(--dark-text-primary);
+}
+
+body.dark-mode .ant-alert-description {
+  color: var(--dark-text-secondary);
+}
+
+/* Dark Mode - Typography */
+body.dark-mode .ant-typography {
+  color: var(--dark-text-primary);
+}
+
+body.dark-mode .ant-typography-secondary {
+  color: var(--dark-text-secondary) !important;
+}
+
+/* Dark Mode - Divider */
+body.dark-mode .ant-divider {
+  border-color: var(--dark-border);
+}
+
+/* Dark Mode - Collapse/Accordion */
+body.dark-mode .ant-collapse {
+  background: var(--dark-card-bg);
+  border-color: var(--dark-border);
+}
+
+body.dark-mode .ant-collapse-header {
+  background: var(--dark-bg-tertiary);
+  color: var(--dark-text-primary) !important;
+}
+
+body.dark-mode .ant-collapse-content {
+  background: var(--dark-card-bg);
+  border-color: var(--dark-border);
+}
+
+body.dark-mode .ant-collapse-content-box {
+  background: var(--dark-card-bg);
+}
+
+/* Dark Mode - Tabs */
+body.dark-mode .ant-tabs-nav {
+  background: var(--dark-card-bg);
+}
+
+body.dark-mode .ant-tabs-tab {
+  color: var(--dark-text-secondary);
+}
+
+body.dark-mode .ant-tabs-tab-active .ant-tabs-tab-btn {
+  color: var(--teal-light) !important;
+}
+
+body.dark-mode .ant-tabs-ink-bar {
+  background: var(--teal-primary);
+}
+
+/* Dark Mode - List */
+body.dark-mode .ant-list {
+  color: var(--dark-text-primary);
+}
+
+body.dark-mode .ant-list-item {
+  border-color: var(--dark-border);
+  color: var(--dark-text-primary);
+}
+
+body.dark-mode .ant-list-item-meta-title {
+  color: var(--dark-text-primary);
+}
+
+body.dark-mode .ant-list-item-meta-description {
+  color: var(--dark-text-secondary);
+}
+
+/* Dark Mode - Upload */
+body.dark-mode .ant-upload {
+  background: var(--dark-bg-tertiary);
+  border-color: var(--dark-border);
+}
+
+body.dark-mode .ant-upload-drag {
+  background: var(--dark-bg-tertiary);
+  border-color: var(--dark-border);
+}
+
+body.dark-mode .ant-upload-drag:hover {
+  border-color: var(--teal-primary);
+}
+
+body.dark-mode .ant-upload-text {
+  color: var(--dark-text-primary);
+}
+
+body.dark-mode .ant-upload-hint {
+  color: var(--dark-text-secondary);
+}
+
+/* Dark Mode - Checkbox */
+body.dark-mode .ant-checkbox-wrapper {
+  color: var(--dark-text-primary);
+}
+
+body.dark-mode .ant-checkbox-inner {
+  background: var(--dark-bg-tertiary);
+  border-color: var(--dark-border);
+}
+
+/* Dark Mode - Radio */
+body.dark-mode .ant-radio-wrapper {
+  color: var(--dark-text-primary);
+}
+
+body.dark-mode .ant-radio-inner {
+  background: var(--dark-bg-tertiary);
+  border-color: var(--dark-border);
+}
+
+/* Dark Mode - Spin */
+body.dark-mode .ant-spin-text {
+  color: var(--dark-text-secondary);
+}
+
+/* Dark Mode - Scrollbar */
+body.dark-mode ::-webkit-scrollbar-track {
+  background: var(--dark-bg-secondary);
+}
+
+body.dark-mode ::-webkit-scrollbar-thumb {
+  background: #4a5568;
+}
+
+body.dark-mode ::-webkit-scrollbar-thumb:hover {
+  background: #6b7280;
+}
+
+/* Dark Mode - Message/Notification */
+body.dark-mode .ant-message-notice-content {
+  background: var(--dark-bg-tertiary);
+  color: var(--dark-text-primary);
+}
+
+body.dark-mode .ant-notification-notice {
+  background: var(--dark-card-bg);
+  border: 1px solid var(--dark-border);
+}
+
+body.dark-mode .ant-notification-notice-message {
+  color: var(--dark-text-primary);
+}
+
+body.dark-mode .ant-notification-notice-description {
+  color: var(--dark-text-secondary);
+}
